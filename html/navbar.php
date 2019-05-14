@@ -5,6 +5,7 @@
                     <a class="nav-link active" href="index.php">Inicio</a>
                     <a class="nav-link" href="politica.php">Política de privacidad</a>
                     <a class="nav-link" href="puntuaciones.php">Puntuaciones</a>
+                    <a class="nav-link" href="condiciones.php">Condiciones</a>
                     </nav>
                 </div>
             </header>
