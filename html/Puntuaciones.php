@@ -19,16 +19,7 @@
 
         <!--Navbar-->
     <div class="container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
-            <header class="masthead">
-                <div class="inner">  
-                    <nav class="nav nav-masthead navbar-expand-lg navbar-light bg-light justify-content-center">
-                            <h3 class="masthead-brand">Crystals collecters</h3>
-                    <a class="nav-link active" href="Index">Inicio</a>
-                    <a class="nav-link" href="politica">Política de privacidad</a>
-                    <a class="nav-link" href="puntuaciones">Puntuaciones</a>
-                    </nav>
-                </div>
-            </header>
+    <?php include('navbar.php');?>
 
         <!--Contenido-->
         <div class="card text-white bg-primary">     
