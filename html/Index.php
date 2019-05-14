@@ -15,7 +15,7 @@
         <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
     </head>
 
-
+    
     <script>
         $(document).ready(function(){
             function obtener()
@@ -41,9 +41,9 @@
                 <div class="inner">  
                     <nav class="nav nav-masthead navbar-expand-lg navbar-light bg-light justify-content-center">
                     <h3 class="masthead-brand" style="font-family: Hobo Std;">Crystals collecters</h3>
-                    <a class="nav-link active" href="#">Inicio</a>
-                    <a class="nav-link" href="#">Política de privacidad</a>
-                    <a class="nav-link" href="#">Puntuaciones</a>
+                    <a class="nav-link active" href="index">Inicio</a>
+                    <a class="nav-link" href="politica">Política de privacidad</a>
+                    <a class="nav-link" href="puntuaciones">Puntuaciones</a>
                     </nav>
                 </div>
             </header>
@@ -71,7 +71,7 @@
                             </tr>
                         </table><br><br>
 
-                        <button href="#" class="btn btn-lg btn-secondary" id="btnJugar"><h4><strong>JUGAR</strong></h4></button>
+                        <button href="ventanaJuego" class="btn btn-lg btn-secondary" id="btnJugar"><h4><strong>JUGAR</strong></h4></button>
                    
             </main>
             <br><br> <br><br> <br>  
