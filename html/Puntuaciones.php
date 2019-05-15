@@ -6,13 +6,48 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,600" rel="stylesheet" type="text/css">
-        <link rel="shortcut icon" href="../images/favicon.ico"/>
+        <link rel="shortcut icon" href="../images/favicon.ico"/>  
+        <!-- Styles -->
+        <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
         <!-- JS -->
         <script type="text/javascript" src="../js/bootstrap.js"></script>
-        <!-- Styles -->
-        
-        <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
-        
+        <script type="text/javascript" src="../js/libs/jquery/jquery-3.3.1.min.js"></script>
+  <script>
+  
+    function obtenerPuntuaciones()
+    {
+        var dataToSend =
+    {
+        action: 'obtenerPuntuaciones'
+    };
+
+    $.ajax({
+            url: 'php/conexion.php',
+            async: 'true',
+            type: 'POST',
+            data: dataToSend,
+            dataType: 'json',
+
+            success: function (respuesta) {
+                for (index = 0; index < respuesta.length; ++index)
+                {
+                    $("#Punt").append("<tr><td><h6>"+respuesta[index].nivel+"</h6></td><td><h6>"+respuesta[index].jugador1+"</h6></td><td><h6>"+respuesta[index].puntuacion1+"</h6></td></tr><tr><td><h6>"+respuesta[index].nivel+"</h6></td><td><h6>"+respuesta[index].jugador2+"</h6></td><td><h6>"+respuesta[index].puntuacion2+"</h6></td><tr>");
+                }
+            },
+            error: function (x, h, r) {
+                alert("Error: " + x + h + r);
+            }
+        });  
+    };
+</script>
+  
+  <title>jQuery Example</title>
+  <script>
+
+    $(document).ready(function() {
+        obtenerPuntuaciones();
+    });
+  </script>    
     </head>
 
     <body class="text-center">
@@ -25,37 +60,17 @@
         <div class="card text-white bg-primary">     
             <div class="card-body">  
                 <div class="justify-content-md-center politica">  
-                    <div class="tabla-puntuaciones">  
-                        <br>           
-                    <h2>PUNTUACIONES</h2> <br><br>  
-                    <table style="width:100%; margin-left: 5em;">
+                    <div class="tabla-puntuaciones">     
+                    <h2>PUNTUACIONES</h2> <br>
+                    <table id="Punt" style="width:100%;">
                             <tr>
                                     <th><h4>Nivel</h4></th>
-                                    <th><h4>&nbsp&nbsp&nbsp&nbsp&nbspJugadores</h4></th>
+                                    <!--<th><h4>&nbsp&nbsp&nbsp&nbsp&nbspJugadores</h4></th>-->
+                                    <th><h4>Jugadores</h4></th>
                                     <th><h4>Puntuación</h4></th> 
                             </tr>
-                            <tr>
-                                    <td><h5>Nv1</h5></td>
-                                    <td><h5>&nbsp&nbsp&nbsp&nbsp&nbspJugador1</h5></td>
-                                    <td><h5>30</h5></td>
-                            </tr>
-                            <tr>
-                                    <td><h5>Nv1</h5></td>
-                                    <td><h5>&nbsp&nbsp&nbsp&nbsp&nbspJugador2</h5></td>
-                                    <td><h5>40</h5></td>
-                            </tr>
-                            <tr>
-                                    <td><h5>Nv2</h5></td>
-                                    <td><h5>&nbsp&nbsp&nbsp&nbsp&nbspJugador1</h5></td>
-                                    <td><h5>30</h5></td>
-                            </tr>
-                            <tr>
-                                    <td><h5>Nv2</h5></td>
-                                    <td><h5>&nbsp&nbsp&nbsp&nbsp&nbspJugador2</h5></td>
-                                    <td><h5>20</h5></td>
-                            </tr>
                     </table>
-                    <br><br>
+                   
                     </div>
                 </div>
             </div>
