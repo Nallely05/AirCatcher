@@ -41,11 +41,6 @@
   box-sizing: border-box;
 }
 
-#canvas{
-  position: static;
-  background-color: white;
-  z-index: -1;
-}
 
 .tabla-puntuaciones
 {
@@ -66,24 +61,24 @@
   
 }
 
-#GUI1 {
+#GUIplayer1Nv1 {
   top: 15%;
   left: -15%;
   color: rgb(132, 0, 255);
   font-family: Hobo Std;
 }
-#GUI2 {
+#GUIpuntos1Nv1 {
   top: 20%;
   left: -15%;
   color: rgb(243, 222, 203);
 }
-#GUI3 {
+#GUIplayer2Nv1 {
   top: 15%;
   left: 45%;
   color: rgb(255, 123, 0);
   font-family: Hobo Std;
 }
-#GUI4 {
+#GUIpuntos2Nv1 {
   top: 20%;
   left: 45%;
   color: rgb(243, 222, 203);

@@ -63,13 +63,13 @@
     $(document).ready(function() {
         obtenerPuntuaciones();
 
-     $('#btnCompartir').click(function(){
-      var username1=$('#jugador1').val();
-      var username2=$('#jugador2').val();
-      var score1=$('#puntuacion1').val();
-      var score2=$('#puntuacion2').val();
-      var nivelAct=$('#nivelAct').val();
-      agregarPuntuaciones(username1,username2,nivelAct,score1,score2);
+     $('#PbtnCompartir').click(function(){
+      var username1=$('#Pjugador1').val();
+      var username2=$('#Pjugador2').val();
+      var score1=$('#Ppuntuacion1').val();
+      var score2=$('#Ppuntuacion2').val();
+      var nivelAct=$('#PnivelAct').val();
+      agregarPuntuaciones(username1,username2,PnivelAct,score1,score2);
         });
     });
   </script>
@@ -78,15 +78,15 @@
   <!--  <div class="fb-share-button" data-href="http://crystalscollecters.twicky.com.mx" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fcrystalscollecters.twicky.com.mx%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
   -->
   <h1>PRUEBAS PUNTUACIONES</h1>
-  <input type="text" id="jugador1" placeholder="Jugador1">
-  <input type="text" id="jugador2" placeholder="Jugador2">
-  <input type="number" id="puntuacion1" placeholder="Puntuacion1">
-  <input type="number" id="puntuacion2" placeholder="Puntuacion2">
-  <input type="number" id="nivelAct" placeholder="nivel">
-<button id="btnCompartir">COMPARTIR</button>
+  <input type="text" id="Pjugador1" placeholder="Jugador1">
+  <input type="text" id="Pjugador2" placeholder="Jugador2">
+  <input type="number" id="Ppuntuacion1" placeholder="Puntuacion1">
+  <input type="number" id="Ppuntuacion2" placeholder="Puntuacion2">
+  <input type="number" id="PnivelAct" placeholder="nivel">
+<button id="PbtnCompartir">COMPARTIR</button>
 <br>
 
-    <table id="Punt" style="width:100%; margin: 5em;">
+    <table id="PPunt" style="width:100%; margin: 5em;">
         <tr>
                 <th><h4>Jugador 1</h4></th>
                 <th><h4>Jugador 2</h4></th>

@@ -25,18 +25,29 @@
 	var clock;
 	var deltaTime;	
 	var keys = {};
-	var objetosConColision;
+	var LimitesEscenarioColision=[];
+	var ColisionCristales=[];
 	var raycast;
+	var objJugador=[];
+	objJugador[0]={};
+	objJugador[1]={};
 	
 
 	var isWorldReady = [ false, false ];
 	$(document).ready(function() {
-
+		
+		function obtener()
+            {
+				$("#GUIplayer1Nv1").html(localStorage.getItem("Jugador1"));
+				$("#GUIplayer2Nv1").html(localStorage.getItem("Jugador2"));
+            }
+            obtener();
 		setupScene();
 
-		raycast = new THREE.Raycaster();
+		objJugador[0].raycast = new THREE.Raycaster();
+		objJugador[1].raycast = new THREE.Raycaster();
 
-		camera.misRayos=[
+		objJugador[0].misRayos=[
 		new THREE.Vector3(1,0,0),
 		new THREE.Vector3(-1,0,0),
 		new THREE.Vector3(0,0,1),
@@ -44,6 +55,58 @@
 		new THREE.Vector3(0,1,0),
 		new THREE.Vector3(0,-1,0)
 		];
+
+		objJugador[1].misRayos=[
+		new THREE.Vector3(1,0,0),
+		new THREE.Vector3(-1,0,0),
+		new THREE.Vector3(0,0,1),
+		new THREE.Vector3(0,0,-1),
+		new THREE.Vector3(0,1,0),
+		new THREE.Vector3(0,-1,0)
+		];
+
+		//--------------------------------------CUBOS LIMITES DE ESCENARIO-------------------------------------------------------
+		var geometry = new THREE.BoxGeometry(1,1,1);
+		var material = new THREE.MeshLambertMaterial({
+				color: new THREE.Color(0.1294117647058824,0.5882352941176471,0.9529411764705882),opacity:0.0,transparent:true
+			});
+		var cube1 = new THREE.Mesh(geometry, material);
+		var cube2 = cube1.clone();
+		var cube3 = cube1.clone();
+		var cube4 = cube1.clone();
+		cube1.name="Limite1";
+		cube2.name="Limite2";
+		cube3.name="Limite3";
+		cube4.name="Limite4";
+		
+		cube1.position.y = 2;
+		cube1.position.z = -5.4;
+		cube1.scale.set(19,5,0.5);
+		LimitesEscenarioColision.push(cube1);
+
+		cube2.rotation.y=THREE.Math.degToRad(90);
+		cube2.position.y = 2;
+		cube2.position.x = -9.6;
+		cube2.scale.set(18,5,0.5);
+		LimitesEscenarioColision.push(cube2);
+
+		
+		cube3.rotation.y=THREE.Math.degToRad(90);
+		cube3.position.y = 2;
+		cube3.position.x = 9.6;
+		cube3.scale.set(18,5,0.5);
+		LimitesEscenarioColision.push(cube3);
+		
+		cube4.position.y = 2;
+		cube4.position.z = 10;
+		cube4.scale.set(19,5,0.5);
+		LimitesEscenarioColision.push(cube4);
+		
+		scene.add(cube1);
+		scene.add(cube2);
+		scene.add(cube3);
+		scene.add(cube4);
+		//------------------------------------------------------------------------------------------------------------------------
 
 		loadOBJWithMTL("../assets/", "Nivel1.obj", "Nivel1.mtl", (object) => {	
 			object.rotation.y=THREE.Math.degToRad(270);	
@@ -58,7 +121,10 @@
 			object.position.z = 8;
 			object.position.x = -7.8;
 			object.scale.set(0.3,0.3,0.3);
-			scene.add(object);
+			objJugador[0].Globo=object;
+			scene.add(objJugador[0].Globo);
+
+		//	scene.add(object);
 			isWorldReady[1] = true;
 		});
 
@@ -68,28 +134,23 @@
 			object.position.y = 0.5;
 			object.position.z = -3.5;
 			object.position.x = 8;
-			scene.add(object);
+			objJugador[1].Globo=object;
+			scene.add(objJugador[1].Globo);
+		//	scene.add(object);
 			isWorldReady[2] = true;
 		});
 
 		loadOBJWithMTL("../assets/", "Cristal.obj", "Cristal.mtl", (object) => {	
 			//object.rotation.y=THREE.Math.degToRad(270);	
+			object.name="Cristal1";
 			object.scale.set(0.03,0.03,0.03);
 			object.position.y = 1;
 
-			objetosConColision.push(object);
+			ColisionCristales.push(object);
 			scene.add(object);
 			isWorldReady[3] = true;
 		});
-/*
-		loadOBJWithMTL("assets/", "jetski.obj", "jetski.mtl", (object) => {
-			object.position.z = -10;
-			object.rotation.x = THREE.Math.degToRad(-90);
-
-			scene.add(object);
-			isWorldReady[1] = true;
-		});
-*/
+		
 		render();
 
 		document.addEventListener('keydown', onKeyDown);
@@ -148,27 +209,42 @@
 		} else if (keys["K"]) {
 			forward2 = 10;
 		}
-		if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2]) {
+		if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3]) {
 
 			var j1=scene.getObjectByName("jugador1");
 			var j2=scene.getObjectByName("jugador2");
-			j1.rotation.y += yaw * deltaTime;
-			j1.translateZ(forward * deltaTime);
-			j2.rotation.y += yaw2 * deltaTime;
-			j2.translateZ(forward2 * deltaTime);
-		}
-		
-
-		for(var i=0; i<camera.misRayos.length; i++)
+			objJugador[0].Globo.rotation.y += yaw * deltaTime;
+			objJugador[0].Globo.translateZ(forward * deltaTime);
+			objJugador[1].Globo.rotation.y += yaw2 * deltaTime;
+			objJugador[1].Globo.translateZ(forward2 * deltaTime);
+	
+		//console.log("Jugador"+objJugador[0].Globo.position);
+		for(var i=0; i<2; i++)
 		{
-			var rayo=camera.misRayos[i];
-			raycast.set(camera.position,rayo);
-			var colisiones = raycast.intersectObjects(objetosConColision, true); //Detecta si hay colisión o no. Regresa un arreglo con los objetos que tocó
-			if(colisiones.length>0){
+			for(var j=0; j<objJugador[i].misRayos.length; j++)
+			{
+				var rayo=objJugador[i].misRayos[j];
+				objJugador[i].raycast.set(objJugador[i].Globo.position,rayo);
+				var colisionCristal= objJugador[i].raycast.intersectObjects(ColisionCristales,true);//El true es para buscar a los hijos de los modelos por si no estan combine
+				if(colisionCristal.length>0 && colisionCristal[0].distance<2000)
+					{
+						var cristalTomado=colisionCristal[0].object;
+						cristalTomado.scale.set(0.03,0.03,0.03);
+						cristalTomado.position.y = 1;
+						objJugador[i].Globo.add(cristalTomado);	
+					}
+				var colisiones = objJugador[i].raycast.intersectObjects(LimitesEscenarioColision, true); //Detecta si hay colisión o no. Regresa un arreglo con los objetos que tocó
+				if(colisiones.length>0 && colisiones[0].distance<1)
+					{
+						if(i==0)
+						{
+						objJugador[0].Globo.translateZ(-(forward * deltaTime));
+						}
+						else{
+							objJugador[1].Globo.translateZ(-(forward2 * deltaTime));
 
-				if(colisiones[0].distance<1){
-					camera.translateZ(-(forward * deltaTime));
-					//console.log("colisionando");
+							}
+					}
 				}
 			}
 		}
@@ -201,7 +277,7 @@
 		grid.position.y = -1;
 		scene.add(grid);
 
-		$("#scene-section").append(renderer.domElement);
+		$("#scene-sectionNv1").append(renderer.domElement);
 	}
 
 
@@ -215,18 +291,20 @@
     <div class="container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
 	<?php include('navbar.php');?>
 
-        <!--Contenido-->
+		<!--Contenido-->
+		<!--<input type="text" id="jugador1">-->
+
         <div class="card text-white bg-primary">     
                 <br><br>    
-                <h5 class="GUI" id="GUI1">Jugador 1</h5>
-                <h6 class="GUI" id="GUI2">30 puntos</h6>
-                <h5 class="GUI" id="GUI3">Jugador 2</h5>
-                <h6 class="GUI" id="GUI4">15 puntos</h6>
+                <h5 class="GUI" id="GUIplayer1Nv1" style="color: rgb(132, 0, 255);font-family: Hobo Std;"></h5>
+                <h6 class="GUI" id="GUIpuntos1Nv1" style="color: rgb(243, 222, 203);">30 puntos</h6>
+                <h5 class="GUI" id="GUIplayer2Nv1" style="color: rgb(255, 123, 0);font-family: Hobo Std;"></h5>
+                <h6 class="GUI" id="GUIpuntos2Nv1" style="color: rgb(243, 222, 203);">15 puntos</h6>
             <main role="main" class="inner cover">
 
 
                 <!--<img src="../images/Juego.png" width="1100" height="500">-->
-                <div id="scene-section"/>
+                <div id="scene-sectionNv1"/>
            </main>
             <br><br> <br><br> <br>  
         </div>

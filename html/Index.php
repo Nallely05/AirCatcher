@@ -62,7 +62,7 @@
                             </tr>
                         </table><br><br>
 
-                        <button href="ventanaJuego" class="btn btn-lg btn-secondary" id="btnJugar"><h4><strong>JUGAR</strong></h4></button>
+                        <button href="" class="btn btn-lg btn-secondary" id="btnJugar" onclick="location='ventanaJuego.php'"><h4><strong>JUGAR</strong></h4></button>
                    
             </main>
             <br><br> <br><br> <br>  

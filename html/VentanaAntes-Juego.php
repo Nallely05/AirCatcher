@@ -54,9 +54,6 @@
         <div class="card text-white bg-primary">     
                 <br><br>    
             <main role="main" class="inner cover">
-                <canvas id="canvas" width="1100" height="500">
-                Tu navegador no admite el elemento &lt;canvas&gt;.
-                </canvas>
             </main>
             <br><br> <br><br> <br>  
           

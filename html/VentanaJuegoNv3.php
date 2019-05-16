@@ -201,7 +201,7 @@
 		grid.position.y = -1;
 		scene.add(grid);
 
-		$("#scene-section").append(renderer.domElement);
+		$("#scene-sectionNv3").append(renderer.domElement);
 	}
 
 
@@ -218,15 +218,15 @@
         <!--Contenido-->
         <div class="card text-white bg-primary">     
                 <br><br>    
-                <h5 class="GUI" id="GUI1">Jugador 1</h5>
-                <h6 class="GUI" id="GUI2">30 puntos</h6>
-                <h5 class="GUI" id="GUI3">Jugador 2</h5>
-                <h6 class="GUI" id="GUI4">15 puntos</h6>
+                <h5 class="GUI" id="GUIplayer1Nv3" style="color: rgb(132, 0, 255);font-family: Hobo Std;"></h5>
+                <h6 class="GUI" id="GUIpuntos1Nv3" style="color: rgb(243, 222, 203);">30 puntos</h6>
+                <h5 class="GUI" id="GUIplayer2Nv3" style="color: rgb(255, 123, 0);font-family: Hobo Std;"></h5>
+                <h6 class="GUI" id="GUIpuntos2Nv3" style="color: rgb(243, 222, 203);">15 puntos</h6>
             <main role="main" class="inner cover">
 
 
                 <!--<img src="../images/Juego.png" width="1100" height="500">-->
-                <div id="scene-section"/>
+                <div id="scene-sectionNv3"/>
            </main>
             <br><br> <br><br> <br>  
         </div>
