@@ -27,14 +27,85 @@
 	var keys = {};
 	var objetosConColision;
 	var raycast;
+	var objJugador=[];
+	objJugador[0]={};
+	objJugador[1]={};
 	
 
 	var isWorldReady = [ false, false ];
 	$(document).ready(function() {
-
+		{
+			function obtener()
+            {
+				$("#GUIplayer1Nv2").html(localStorage.getItem("Jugador1"));
+				$("#GUIplayer2Nv2").html(localStorage.getItem("Jugador2"));
+            }
+            obtener();
 		setupScene();
 
-		raycast = new THREE.Raycaster();
+		objJugador[0].raycast = new THREE.Raycaster();
+		objJugador[1].raycast = new THREE.Raycaster();
+
+		objJugador[0].misRayos=[
+		new THREE.Vector3(1,0,0),
+		new THREE.Vector3(-1,0,0),
+		new THREE.Vector3(0,0,1),
+		new THREE.Vector3(0,0,-1),
+		new THREE.Vector3(0,1,0),
+		new THREE.Vector3(0,-1,0)
+		];
+
+		objJugador[1].misRayos=[
+		new THREE.Vector3(1,0,0),
+		new THREE.Vector3(-1,0,0),
+		new THREE.Vector3(0,0,1),
+		new THREE.Vector3(0,0,-1),
+		new THREE.Vector3(0,1,0),
+		new THREE.Vector3(0,-1,0)
+		];
+
+		//--------------------------------------CUBOS LIMITES DE ESCENARIO-------------------------------------------------------
+		var geometry = new THREE.BoxGeometry(1,1,1);
+		var material = new THREE.MeshLambertMaterial({
+				color: new THREE.Color(0.1294117647058824,0.5882352941176471,0.9529411764705882),opacity:0.0,transparent:true
+			});
+		var cube1 = new THREE.Mesh(geometry, material);
+		var cube2 = cube1.clone();
+		var cube3 = cube1.clone();
+		var cube4 = cube1.clone();
+		cube1.name="Limite1";
+		cube2.name="Limite2";
+		cube3.name="Limite3";
+		cube4.name="Limite4";
+		
+		cube1.position.y = 2;
+		cube1.position.z = -5.4;
+		cube1.scale.set(19,5,0.5);
+		LimitesEscenarioColision.push(cube1);
+
+		cube2.rotation.y=THREE.Math.degToRad(90);
+		cube2.position.y = 2;
+		cube2.position.x = -9.6;
+		cube2.scale.set(18,5,0.5);
+		LimitesEscenarioColision.push(cube2);
+
+		
+		cube3.rotation.y=THREE.Math.degToRad(90);
+		cube3.position.y = 2;
+		cube3.position.x = 9.6;
+		cube3.scale.set(18,5,0.5);
+		LimitesEscenarioColision.push(cube3);
+		
+		cube4.position.y = 2;
+		cube4.position.z = 10;
+		cube4.scale.set(19,5,0.5);
+		LimitesEscenarioColision.push(cube4);
+		
+		scene.add(cube1);
+		scene.add(cube2);
+		scene.add(cube3);
+		scene.add(cube4);
+		//------------------------------------------------------------------------------------------------------------------------
 
 		camera.misRayos=[
 		new THREE.Vector3(1,0,0),

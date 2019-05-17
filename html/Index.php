@@ -20,6 +20,8 @@
         $(document).ready(function(){
             function obtener()
             {
+                var getJ1;
+                var getJ2;
                 $("#jugador1").val(localStorage.getItem("Jugador1"));
                 $("#jugador2").val(localStorage.getItem("Jugador2"));
             }
@@ -29,6 +31,8 @@
                var j2 =$("#jugador2").val(); 
                localStorage.setItem("Jugador1",j1);
                localStorage.setItem("Jugador2",j2);
+               localStorage.setItem("puntuacionJ1",0);
+               localStorage.setItem("puntuacionJ2",0);
             });
         });
     </script>

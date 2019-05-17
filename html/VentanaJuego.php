@@ -26,22 +26,108 @@
 	var deltaTime;	
 	var keys = {};
 	var LimitesEscenarioColision=[];
+	var basesColision=[];
 	var ColisionCristales=[];
 	var raycast;
 	var objJugador=[];
+	var JuegoEnProceso= false;
 	objJugador[0]={};
 	objJugador[1]={};
+	objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
+	objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2");
 	
+	function finDelJuego()
+		{
+			$(".GUI").hide();
+			$("#Menu-FinNivel1").show();
+			$("#GUI_FinalJ1Nv1").html(localStorage.getItem("Jugador1")+": "+objJugador[0].puntuacion+" puntos");
+			$("#GUI_FinalJ2Nv1").html(localStorage.getItem("Jugador2")+": "+objJugador[1].puntuacion+" puntos");
+			//objJugador[0].puntuacion=5;
+			//objJugador[1].puntuacion=15;
+			localStorage.setItem("puntuacionJ1",objJugador[0].puntuacion);
+            localStorage.setItem("puntuacionJ2",objJugador[1].puntuacion);
+		}
+
+	function actualizarGUI()
+		{
+			debugger;
+			localStorage.setItem("puntuacionJ1",objJugador[0].puntuacion);
+			localStorage.setItem("puntuacionJ2",objJugador[1].puntuacion);
+			$("#GUIpuntos1Nv1").html(objJugador[0].puntuacion);
+			$("#GUIpuntos2Nv1").html(objJugador[1].puntuacion);
+		}
+
+	function getRandomPos(max, min) 
+	{
+		var nAux = 0;
+		nAux = Math.random() * (max - min) + min;
+		//if (nAux > (max / 2))
+		//	nAux = (nAux / 2 * -1);
+		return nAux.toFixed(2);
+	}
 
 	var isWorldReady = [ false, false ];
-	$(document).ready(function() {
+	$(document).ready(function() 
+	{
+		$("#Menu-Pausa").hide();
+		$(".GUI").hide();
+		$("#Menu-Sonido").hide();
+		$("#Menu-FinNivel1").hide();
+		$("#Boton-IniciarJuego").click(function()
+		{
+			$("#Menu-Instrucciones").hide();
+			$(".GUI").show();
+			JuegoEnProceso=true;
+		});
 		
+		$("#Boton-ContinuarPartida").click(function()
+		{
+			$("#Menu-Pausa").hide();
+			$(".GUI").show();
+			JuegoEnProceso=true;
+		});
+
+		$("#Boton-OpcSonido").click(function()
+		{
+			$("#Menu-Pausa").hide();
+			$("#Menu-Sonido").show();
+		});
+
+		$("#CerrarMenuSonido").click(function()
+		{
+			$("#Menu-Sonido").hide();
+			$("#Menu-Pausa").show();
+		});
+
+		
+		
+	/*
+		$("#BotonTiempo").click(function(){
+		//$(".modalPausa").click(function(){
+			JuegoEnProceso=!JuegoEnProceso;
+			if(JuegoEnProceso){
+				$(this).html("Pausa");	
+			}
+			else{
+					$(this).html("Continuar");
+					
+					 
+			}
+			});*/
+
+		
+
 		function obtener()
             {
+				objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
+				objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2");
 				$("#GUIplayer1Nv1").html(localStorage.getItem("Jugador1"));
-				$("#GUIplayer2Nv1").html(localStorage.getItem("Jugador2"));
+				$("#GUIplayer2Nv1").html(localStorage.getItem("Jugador2")); 
+				$("#GUIpuntos1Nv1").html(objJugador[0].puntuacion);
+				$("#GUIpuntos2Nv1").html(objJugador[1].puntuacion);
             }
-            obtener();
+			obtener();
+		
 		setupScene();
 
 		objJugador[0].raycast = new THREE.Raycaster();
@@ -74,10 +160,14 @@
 		var cube2 = cube1.clone();
 		var cube3 = cube1.clone();
 		var cube4 = cube1.clone();
+		var cube5 = cube1.clone();
+		var cube6 = cube1.clone();
 		cube1.name="Limite1";
 		cube2.name="Limite2";
 		cube3.name="Limite3";
 		cube4.name="Limite4";
+		cube5.name="BaseJugador1";
+		cube6.name="BaseJugador2";
 		
 		cube1.position.y = 2;
 		cube1.position.z = -5.4;
@@ -101,11 +191,27 @@
 		cube4.position.z = 10;
 		cube4.scale.set(19,5,0.5);
 		LimitesEscenarioColision.push(cube4);
+
+		//------------BASES-----------
+		cube5.position.y = 1;
+		cube5.position.z = 8;
+		cube5.position.x = -7.8;
+		cube5.scale.set(1.15,1.3,1.1);
+		basesColision.push(cube5);
+
+		cube6.position.y = 1;
+		cube6.position.z = -3.5;
+		cube6.position.x = 8;
+		cube6.scale.set(1.15,1.3,1.1);
+		basesColision.push(cube6);
+		//------------BASES-----------
 		
 		scene.add(cube1);
 		scene.add(cube2);
 		scene.add(cube3);
 		scene.add(cube4);
+		scene.add(cube5);
+		scene.add(cube6);
 		//------------------------------------------------------------------------------------------------------------------------
 
 		loadOBJWithMTL("../assets/", "Nivel1.obj", "Nivel1.mtl", (object) => {	
@@ -142,12 +248,19 @@
 
 		loadOBJWithMTL("../assets/", "Cristal.obj", "Cristal.mtl", (object) => {	
 			//object.rotation.y=THREE.Math.degToRad(270);	
-			object.name="Cristal1";
-			object.scale.set(0.03,0.03,0.03);
-			object.position.y = 1;
+			
+			
+			object.position.y = 0.5;
 
-			ColisionCristales.push(object);
-			scene.add(object);
+			for(var i=0; i<10; i++)
+			{
+				object.position.x=getRandomPos(8,-8.6);
+				object.position.z=getRandomPos(9,1);
+				object.scale.set(0.03,0.03,0.03);
+				object.name="Cristal-"+i;
+				ColisionCristales.push(object.clone());
+				scene.add(ColisionCristales[i]);
+			}
 			isWorldReady[3] = true;
 		});
 		
@@ -178,76 +291,162 @@
 	function onKeyUp(event) {
 		keys[String.fromCharCode(event.keyCode)] = false;
 	}
-
-	
-	function render() {
-		requestAnimationFrame(render);
-		deltaTime = clock.getDelta();	
-		//------------------------JUGADOR1-----------------------------
-		var yaw = 0;
-		var forward = 0;
-		if (keys["A"]) {
-			yaw = 2;
-		} else if (keys["D"]) {
-			yaw = -2;
-		}
-		if (keys["W"]) {
-			forward = -10;
-		} else if (keys["S"]) {
-			forward = 10;
-		}
-		//------------------------JUGADOR2-----------------------------
-		var yaw2 = 0;
-		var forward2 = 0;
-		if (keys["J"]) {
-			yaw2 = 2;
-		} else if (keys["L"]) {
-			yaw2 = -2;
-		}
-		if (keys["I"]) {
-			forward2 = -10;
-		} else if (keys["K"]) {
-			forward2 = 10;
-		}
-		if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3]) {
-
-			var j1=scene.getObjectByName("jugador1");
-			var j2=scene.getObjectByName("jugador2");
-			objJugador[0].Globo.rotation.y += yaw * deltaTime;
-			objJugador[0].Globo.translateZ(forward * deltaTime);
-			objJugador[1].Globo.rotation.y += yaw2 * deltaTime;
-			objJugador[1].Globo.translateZ(forward2 * deltaTime);
-	
-		//console.log("Jugador"+objJugador[0].Globo.position);
-		for(var i=0; i<2; i++)
+	var segundos=60;
+	var minutos=3600;
+	var tiempoJuegoMinutos=2;
+	var tiempoJuegoSegundos=0;
+	var contTiempoJuegoMinutos=minutos;
+	var contTiempoJuegoSegundos=segundos;
+	function juegoTime()
+	{	
+		if(JuegoEnProceso)
 		{
-			for(var j=0; j<objJugador[i].misRayos.length; j++)
+			contTiempoJuegoMinutos--;
+			contTiempoJuegoSegundos--;
+		}
+			if(contTiempoJuegoSegundos<=0)
 			{
-				var rayo=objJugador[i].misRayos[j];
-				objJugador[i].raycast.set(objJugador[i].Globo.position,rayo);
-				var colisionCristal= objJugador[i].raycast.intersectObjects(ColisionCristales,true);//El true es para buscar a los hijos de los modelos por si no estan combine
-				if(colisionCristal.length>0 && colisionCristal[0].distance<2000)
-					{
-						var cristalTomado=colisionCristal[0].object;
-						cristalTomado.scale.set(0.03,0.03,0.03);
-						cristalTomado.position.y = 1;
-						objJugador[i].Globo.add(cristalTomado);	
-					}
-				var colisiones = objJugador[i].raycast.intersectObjects(LimitesEscenarioColision, true); //Detecta si hay colisión o no. Regresa un arreglo con los objetos que tocó
-				if(colisiones.length>0 && colisiones[0].distance<1)
-					{
-						if(i==0)
-						{
-						objJugador[0].Globo.translateZ(-(forward * deltaTime));
-						}
-						else{
-							objJugador[1].Globo.translateZ(-(forward2 * deltaTime));
+				if(tiempoJuegoSegundos<=0)
+				{
+					tiempoJuegoSegundos=59;
+				}
+				tiempoJuegoSegundos--;
+				contTiempoJuegoSegundos=segundos;
+			}
+			
+			
+			if(contTiempoJuegoMinutos<=0)
+			{
+				if(tiempoJuegoMinutos<=0)
+				{
+					tiempoJuegoMinutos=59;
+				}
+				tiempoJuegoMinutos--;
+				contTiempoJuegoMinutos=minutos;
+			}
+			if(tiempoJuegoMinutos<=0 && tiempoJuegoSegundos<=0)
+			{
+				$("#Tiempo").html("00:00");
+				JuegoEnProceso=false;
+				finDelJuego();
+			}
+			if(JuegoEnProceso)
+			$("#Tiempo").html("0"+tiempoJuegoMinutos+":"+tiempoJuegoSegundos);	
 
+	}
+	function render() {
+		
+		requestAnimationFrame(render);
+		
+		
+			deltaTime = clock.getDelta();	
+			juegoTime();
+
+			//console.log("Tiempo:"+tiempoJuegoSegundos);
+			//------------------------JUGADOR1-----------------------------
+			var yaw = 0;
+			var forward = 0;
+			if (keys["A"]) {
+				yaw = 2;
+			} else if (keys["D"]) {
+				yaw = -2;
+			}
+			if (keys["W"]) {
+				forward = -10;
+			} else if (keys["S"]) {
+				forward = 10;
+			}
+			//------------------------JUGADOR2-----------------------------
+			var yaw2 = 0;
+			var forward2 = 0;
+			if (keys["J"]) {
+				yaw2 = 2;
+			} else if (keys["L"]) {
+				yaw2 = -2;
+			}
+			if (keys["I"]) {
+				forward2 = -10;
+			} else if (keys["K"]) {
+				forward2 = 10;
+			}
+
+			//-----------------------PAUSA------------------------------
+			if (keys["G"]) {
+				JuegoEnProceso=false;
+				$(".GUI").hide();
+				$("#Menu-Pausa").show();
+			}
+			//pausarJuego()
+		
+			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3]) {
+
+				var j1=scene.getObjectByName("jugador1");
+				var j2=scene.getObjectByName("jugador2");
+				if(JuegoEnProceso){
+				objJugador[0].Globo.rotation.y += yaw * deltaTime;
+				objJugador[0].Globo.translateZ(forward * deltaTime);
+				objJugador[1].Globo.rotation.y += yaw2 * deltaTime;
+				objJugador[1].Globo.translateZ(forward2 * deltaTime);
+						
+				}
+			//console.log("Jugador"+objJugador[0].Globo.position);
+			for(var i=0; i<2; i++)
+			{
+				for(var j=0; j<objJugador[i].misRayos.length; j++)
+				{
+					var rayo=objJugador[i].misRayos[j];
+					objJugador[i].raycast.set(objJugador[i].Globo.position,rayo);
+					var colisionCristal= objJugador[i].raycast.intersectObjects(ColisionCristales,true);//El true es para buscar a los hijos de los modelos por si no estan combine
+					if(colisionCristal.length>0 && colisionCristal[0].distance<2000)
+						{
+							var cristalTomado=colisionCristal[0].object;
+							cristalTomado.scale.set(0.03,0.03,0.03);
+							cristalTomado.position.y = 1;
+							objJugador[i].Globo.add(cristalTomado);	
+						}
+					var colisiones = objJugador[i].raycast.intersectObjects(LimitesEscenarioColision, true); //Detecta si hay colisión o no. Regresa un arreglo con los objetos que tocó
+					if(colisiones.length>0 && colisiones[0].distance<1)
+						{
+							if(i==0)
+							{
+							objJugador[0].Globo.translateZ(-(forward * deltaTime));
 							}
+							else{
+								objJugador[1].Globo.translateZ(-(forward2 * deltaTime));
+
+								}
+						}
+						var colisionConBase = objJugador[i].raycast.intersectObjects(basesColision, true); //Detecta si hay colisión o no. Regresa un arreglo con los objetos que tocó
+						if(colisionConBase.length>0 && colisionConBase[0].distance<1)
+						{
+							var contarCristal;
+							for(var n=0; n< objJugador[i].Globo.children.length;n++)
+							{
+								var nombreHijo=objJugador[i].Globo.children[n].name;
+								if(nombreHijo.substring(0,8) == "Diamonds")
+								{
+									contarCristal=n;
+									scene.remove(objJugador[i].Globo.children[n]);
+									objJugador[i].puntuacion++;
+									objJugador[i].Globo.children.splice(n,1);
+									actualizarGUI();
+								}
+							} //debugger;
+						}
+					//	{
+							//alert("Colisiona");
+							/*if(i==0)
+							{
+							objJugador[0].Globo.translateZ(-(forward * deltaTime));
+							}
+							else{
+								objJugador[1].Globo.translateZ(-(forward2 * deltaTime));
+							}*/
+						//}
 					}
 				}
 			}
-		}
+			
 		renderer.render(scene, camera);
 	}
     
@@ -273,9 +472,9 @@
 		directionalLight.position.set(0, 0, 1);
 		scene.add(directionalLight);
 
-		var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
-		grid.position.y = -1;
-		scene.add(grid);
+		//var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
+		//grid.position.y = -1;
+		//scene.add(grid);
 
 		$("#scene-sectionNv1").append(renderer.domElement);
 	}
@@ -287,37 +486,92 @@
 
     <body class="text-center">
 
-        <!--Navbar-->
-    <div class="container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
-	<?php include('navbar.php');?>
+				<!--Navbar-->
+			<div class="container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
+			<?php include('navbar.php');?>
 
-		<!--Contenido-->
-		<!--<input type="text" id="jugador1">-->
+				<!--Contenido-->
 
-        <div class="card text-white bg-primary">     
-                <br><br>    
-                <h5 class="GUI" id="GUIplayer1Nv1" style="color: rgb(132, 0, 255);font-family: Hobo Std;"></h5>
-                <h6 class="GUI" id="GUIpuntos1Nv1" style="color: rgb(243, 222, 203);">30 puntos</h6>
-                <h5 class="GUI" id="GUIplayer2Nv1" style="color: rgb(255, 123, 0);font-family: Hobo Std;"></h5>
-                <h6 class="GUI" id="GUIpuntos2Nv1" style="color: rgb(243, 222, 203);">15 puntos</h6>
-            <main role="main" class="inner cover">
+				<!-- ************************MENUS*********************** -->
+				<div class="modalPausa" id="Menu-Instrucciones" style="top:12%;">
+					<div class="justify-content-center">
+					<button type="button" class="close" data-dismiss="modal1" style="color:white;" aria-label="Close" id="Cerrar-Instrucciones">X</button><br>
+						<h2 style="color:white;">INSTRUCCIONES</h2><br>
+						<h6 style="color:white;">Recolecta la mayor cantidad de gemas posibles llevándolas a tu base para ganar a tu contrincante.</h6><br>
+						<h5 style="color:white;">El jugador 1 deberá utilizar las teclas ASDW para moverse, mientras el jugador 2 deberá utilizar JKLI</h5><br>
+						<img src="../images/teclas.png"><br><br>
+						<h5 style="color:white;">Para pausar el juego pulsa "G"</h5>
+						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button><br><br>
+					</div>
+				</div>
 
 
-                <!--<img src="../images/Juego.png" width="1100" height="500">-->
-                <div id="scene-sectionNv1"/>
-           </main>
-            <br><br> <br><br> <br>  
-        </div>
-    </div>
+				<div class="modalPausa" id="Menu-Pausa">
+								<div class="justify-content-center">
+								<button type="button" class="close" data-dismiss="modal1" style="color:white;" id="CerrarPausaYcontinuar" aria-label="Close">X</button><br>
+									<h1 style="color:white;">PAUSA</h1>
+									<br>
+									<button class="BtnOpcion" id="Boton-ContinuarPartida"><h4>Continuar partida</h4></button><br><br>
+									<button class="BtnOpcion" id="Boton-Reiniciar"><h4>Reiniciar nivel</h4></button><br><br>
+									<button class="BtnOpcion" id="Boton-OpcSonido"><h4>Opciones de sonido</h4></button><br><br>
+									<button class="BtnOpcion" id="Boton-Salir"><h4>Salir del juego</h4></button><br><br><br><br> <!--Volver al inicio-->
+								</div>
+							</div>
 
-        <!--FOOTER-->
-   <div class="container-fluid">
-        <footer>
-            <table class="navbar navbar-expand-lg navbar-light bg-light" style="width:100%">  
-                <td><p class="ArrobaHispanofic" style="color:white;">© Crystals collecters 2019</p></td>
-            </table>
-        </footer>
-    </div>
+				<div class="modalPausa" id="Menu-Sonido">
+					<div class="justify-content-center">
+					<button type="button" class="close" id="CerrarMenuSonido"  data-dismiss="modal1" style="color:white;" aria-label="Close">X</button><br>
+						<h1 style="color:white;">SONIDO</h1>
+						<br>
+						<button class="BtnOpcion"><h4>Canción 1</h4></button><br><br>
+						<button class="BtnOpcion"><h4>Canción 2</h4></button><br><br>
+						<button class="BtnOpcion"><h4>Canción 3</h4></button><br><br>
+						<button class="BtnOpcion"><h4>Silenciar</h4></button><br>
+					<br><br><br><br>
+					</div>
+				</div>
 
-        </body>
+				<div class="modalPausa" id="Menu-FinNivel1">
+					<div class="justify-content-center">
+						<h1 style="color:white;">RESULTADOS NIVEL 1</h1>
+						<br><br><br> 
+						<h1 id="GUI_FinalJ1Nv1"style="color:white;">Jugador 1:</h1> <h1 id="GUI_FinalJ2Nv1" style="color:white;">Jugador 2:</h1> <br>
+						<!--<button style=" color: #fff; background-color:rgba(41, 7, 71,0.5);  border-color: #ffffff; border-width: 30%; font-weight: 400; border-radius: 0.60rem;"><h4>Compartir resultado <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
+						--><div id="fb-root"></div>
+						<button class="BtnOpcion1" id="Boton-ContinuarNv2"><h4>Pasar a Nivel 2</h4></button>
+						<button class="BtnOpcion1"><h4>Reiniciar nivel</h4></button>
+						<button class="BtnOpcion1"><h4>Salir del juego</h4></button><br><br>
+					</div>
+				</div>
+				<!-- ************************GUI*********************** -->
+
+
+				<div class="card text-white bg-primary">     
+						<br><br>    
+						<h5 class="GUI" id="GUIplayer1Nv1" style="color: rgb(132, 0, 255);font-family: Hobo Std;"></h5>
+						<h6 class="GUI" id="GUIpuntos1Nv1" style="color: rgb(243, 222, 203);"></h6>
+						<h3 class="GUI" id="Tiempo" style="color: black;">03:00</h3>
+						<!--<button id="BotonTiempo">Pausa</button>-->
+						<h5 class="GUI" id="GUIplayer2Nv1" style="color: rgb(255, 123, 0);font-family: Hobo Std;"></h5>
+						<h6 class="GUI" id="GUIpuntos2Nv1" style="color: rgb(243, 222, 203);"></h6>
+					<main role="main" class="inner cover">
+
+
+						<!--<img src="../images/Juego.png" width="1100" height="500">-->
+						<div id="scene-sectionNv1"/>
+				</main>
+					<br><br> <br><br> <br>  
+				</div>
+			</div>
+
+				<!--FOOTER
+		<div class="container-fluid">
+				<footer>
+					<table class="navbar navbar-expand-lg navbar-light bg-light" style="width:100%">  
+						<td><p class="ArrobaHispanofic" style="color:white;">© Crystals collecters 2019</p></td>
+					</table>
+				</footer>
+			</div>-->
+
+    </body>
 </html>

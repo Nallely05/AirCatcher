@@ -27,11 +27,20 @@
 	var keys = {};
 	var objetosConColision;
 	var raycast;
+	var objJugador=[];
+	objJugador[0]={};
+	objJugador[1]={};
 	
 
 	var isWorldReady = [ false, false ];
 	$(document).ready(function() {
-
+		{
+			function obtener()
+            {
+				$("#GUIplayer1Nv3").html(localStorage.getItem("Jugador1"));
+				$("#GUIplayer2Nv3").html(localStorage.getItem("Jugador2"));
+            }
+            obtener();
 		setupScene();
 
 		raycast = new THREE.Raycaster();

@@ -23,7 +23,7 @@
 
  <!-- Large modal -->
 
- <div class="modalPausa">
+ <div class="modalPausa" id="Menu-Sonido">
      <div class="justify-content-center">
      <button type="button" class="close" data-dismiss="modal1" style="color:white;" aria-label="Close">X</button><br>
           <h1 style="color:white;">SONIDO</h1>
