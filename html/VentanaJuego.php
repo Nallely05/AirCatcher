@@ -2,7 +2,8 @@
 <html lang="en">
     <head>
         <title> Juego </title>
-        <meta charset="UTF-8">
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,600" rel="stylesheet" type="text/css">
@@ -31,11 +32,76 @@
 	var raycast;
 	var objJugador=[];
 	var JuegoEnProceso= false;
+	var yaw = 0;
+	var forward = 0;
+	var yaw2 = 0;
+	var forward2 = 0;
 	objJugador[0]={};
 	objJugador[1]={};
 	objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
 	objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2");
 	
+	var hasGP = false;
+    var repGP;
+ 
+    function canGame() {
+        return "getGamepads" in navigator;
+    }
+ 
+    function reportOnGamepad() 
+	{
+        var gp = navigator.getGamepads()[0];
+        var gp1 = navigator.getGamepads()[1];
+ 		
+		 //Jugador 1
+
+		yaw = 0;
+		forward = 0;
+		yaw2 = 0;
+		forward2 = 0;
+		
+		if (gp.buttons[0].pressed) {
+			forward = -10;
+			} else if (gp.buttons[1].pressed) {
+				forward = 10;
+			}
+		if (gp.buttons[14].pressed) {
+			
+			yaw = 2;
+		} else if (gp.buttons[15].pressed) {
+			yaw = -2;
+		}
+
+		if (gp1.buttons[0].pressed) {
+			forward2 = -10;
+			} else if (gp1.buttons[1].pressed) {
+				forward2 = 10;
+			}
+		if (gp1.buttons[14].pressed) {
+			
+			yaw2 = 2;
+		} else if (gp1.buttons[15].pressed) {
+			yaw2 = -2;
+		}
+
+			//Pausa
+
+			if(gp.buttons[9].pressed)
+			{
+				JuegoEnProceso=false;	
+				$(".GUI").hide();
+				$("#Menu-Pausa").show();
+			}
+
+			if(gp1.buttons[9].pressed)
+			{
+				JuegoEnProceso=false;	
+				$(".GUI").hide();
+				$("#Menu-Pausa").show();
+			}	
+    }
+
+
 	function finDelJuego()
 		{
 			$(".GUI").hide();
@@ -50,7 +116,6 @@
 
 	function actualizarGUI()
 		{
-			debugger;
 			localStorage.setItem("puntuacionJ1",objJugador[0].puntuacion);
 			localStorage.setItem("puntuacionJ2",objJugador[1].puntuacion);
 			$("#GUIpuntos1Nv1").html(objJugador[0].puntuacion);
@@ -65,14 +130,66 @@
 		//	nAux = (nAux / 2 * -1);
 		return nAux.toFixed(2);
 	}
-
+	
 	var isWorldReady = [ false, false ];
 	$(document).ready(function() 
 	{
+		
+		$("#cancion").trigger('play');
 		$("#Menu-Pausa").hide();
 		$(".GUI").hide();
 		$("#Menu-Sonido").hide();
 		$("#Menu-FinNivel1").hide();
+
+		$("#cancion1").click(function(){
+			$("#cancion").attr("src","../music/0.mp3");
+			$("#cancion").trigger('play');
+		});
+		$("#cancion2").click(function(){
+			$("#cancion").attr("src","../music/1.mp3");
+			$("#cancion").trigger('play');
+		});
+		$("#cancion3").click(function(){
+			$("#cancion").attr("src","../music/2.mp3");
+			$("#cancion").trigger('play');
+		});
+
+		$("#silencio").click(function(){
+			$("#cancion").trigger('pause');
+		});
+
+		
+		
+        if(canGame()) 
+		{
+ 
+			var prompt = "To begin using your gamepad, connect it and press any button!";
+			$("#gamepadPrompt").text(prompt);
+
+			$(window).on("gamepadconnected", function() {
+				hasGP = true;
+				//alert("Gamepad connected!");
+				//console.log("connection event");
+				repGP = window.setInterval(reportOnGamepad,100);
+			});
+
+			$(window).on("gamepaddisconnected", function() {
+				//console.log("disconnection event");
+				//$("#gamepadPrompt").text(prompt);
+				window.clearInterval(repGP);
+			});
+
+			//setup an interval for Chrome
+			var checkGP = window.setInterval(function() {
+				//console.log('checkGP');
+				if(navigator.getGamepads()[0] && navigator.getGamepads()[1]) {
+					if(!hasGP) $(window).trigger("gamepadconnected");
+					window.clearInterval(checkGP);
+				}
+			}, 500);
+		}
+
+
 		$("#Boton-IniciarJuego").click(function()
 		{
 			$("#Menu-Instrucciones").hide();
@@ -99,7 +216,7 @@
 			$("#Menu-Pausa").show();
 		});
 
-		
+
 		
 	/*
 		$("#BotonTiempo").click(function(){
@@ -338,14 +455,12 @@
 		
 		requestAnimationFrame(render);
 		
-		
 			deltaTime = clock.getDelta();	
 			juegoTime();
 
 			//console.log("Tiempo:"+tiempoJuegoSegundos);
 			//------------------------JUGADOR1-----------------------------
-			var yaw = 0;
-			var forward = 0;
+		
 			if (keys["A"]) {
 				yaw = 2;
 			} else if (keys["D"]) {
@@ -357,8 +472,7 @@
 				forward = 10;
 			}
 			//------------------------JUGADOR2-----------------------------
-			var yaw2 = 0;
-			var forward2 = 0;
+		
 			if (keys["J"]) {
 				yaw2 = 2;
 			} else if (keys["L"]) {
@@ -371,7 +485,7 @@
 			}
 
 			//-----------------------PAUSA------------------------------
-			if (keys["G"]) {
+			if (keys["G"]) { //32
 				JuegoEnProceso=false;
 				$(".GUI").hide();
 				$("#Menu-Pausa").show();
@@ -485,7 +599,8 @@
     </head>
 
     <body class="text-center">
-
+	<audio autoplay loop controls hidden id="cancion" src="../music/0.mp3" style="z-index:99; color:white;">
+    </audio>
 				<!--Navbar-->
 			<div class="container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
 			<?php include('navbar.php');?>
@@ -523,10 +638,10 @@
 					<button type="button" class="close" id="CerrarMenuSonido"  data-dismiss="modal1" style="color:white;" aria-label="Close">X</button><br>
 						<h1 style="color:white;">SONIDO</h1>
 						<br>
-						<button class="BtnOpcion"><h4>Canción 1</h4></button><br><br>
-						<button class="BtnOpcion"><h4>Canción 2</h4></button><br><br>
-						<button class="BtnOpcion"><h4>Canción 3</h4></button><br><br>
-						<button class="BtnOpcion"><h4>Silenciar</h4></button><br>
+						<button class="BtnOpcion" id="cancion1"><h4>Canción 1</h4></button><br><br>
+						<button class="BtnOpcion" id="cancion2"><h4>Canción 2</h4></button><br><br>
+						<button class="BtnOpcion" id="cancion3"><h4>Canción 3</h4></button><br><br>
+						<button class="BtnOpcion" id="silencio"><h4>Silenciar</h4></button><br>
 					<br><br><br><br>
 					</div>
 				</div>
