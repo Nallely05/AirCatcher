@@ -18,7 +18,7 @@
         <script type="text/javascript" src="../js/libs/three/MTLLoader.js"></script>
         <script type="text/javascript" src="../js/libs/three/OBJLoader.js"></script>
         <script type="text/javascript">
-        	var scene;
+    var scene;
 	var camera;
 	var renderer;
 	var controls;
@@ -36,6 +36,11 @@
 	var forward = 0;
 	var yaw2 = 0;
 	var forward2 = 0;
+	var particles = new THREE.Geometry;
+	var particleTexture =THREE.ImageUtils.loadTexture('../images/Hoja.png');
+	var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 1 });
+	var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
+		
 	objJugador[0]={};
 	objJugador[1]={};
 	objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
@@ -338,7 +343,7 @@
 			isWorldReady[0] = true;
 		});
 
-		loadOBJWithMTL("../assets/", "Jugador1.obj", "Jugador1.mtl", (object) => {
+		loadOBJWithMTL("../assets/", "J1.obj", "J1.mtl", (object) => {
 			object.name="jugador1";
 			object.position.y = 0.5;
 			object.position.z = 8;
@@ -351,7 +356,7 @@
 			isWorldReady[1] = true;
 		});
 
-		loadOBJWithMTL("../assets/", "Jugador2.obj", "Jugador2.mtl", (object) => {
+		loadOBJWithMTL("../assets/", "J2.obj", "J2.mtl", (object) => {
 			object.name="jugador2";
 			object.scale.set(0.3,0.3,0.3);
 			object.position.y = 0.5;
@@ -371,8 +376,8 @@
 
 			for(var i=0; i<10; i++)
 			{
-				object.position.x=getRandomPos(8,-8.6);
-				object.position.z=getRandomPos(9,1);
+				object.position.x=getRandomPos(7,-7.6);
+				object.position.z=getRandomPos(8,2);
 				object.scale.set(0.03,0.03,0.03);
 				object.name="Cristal-"+i;
 				ColisionCristales.push(object.clone());
@@ -454,13 +459,20 @@
 	function render() {
 		
 		requestAnimationFrame(render);
-		
+
+            var delta = clock.getDelta();
+            particleSystem.rotation.y += delta;
 			deltaTime = clock.getDelta();	
 			juegoTime();
 
 			//console.log("Tiempo:"+tiempoJuegoSegundos);
 			//------------------------JUGADOR1-----------------------------
-		
+			
+			yaw = 0;
+			forward = 0;
+			yaw2 = 0;
+			forward2 = 0;
+
 			if (keys["A"]) {
 				yaw = 2;
 			} else if (keys["D"]) {
@@ -579,17 +591,21 @@
 		renderer.setPixelRatio(visibleSize.width / visibleSize.height);
 		renderer.setSize(visibleSize.width, visibleSize.height);
 
-		var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 0.8);
+		var ambientLight = new THREE.AmbientLight(new THREE.Color(1.0, 1.0, 1.0), 0.5);
 		scene.add(ambientLight);
 
-		var directionalLight = new THREE.DirectionalLight(new THREE.Color(1, 0.5, 0), 0.4);
+		var directionalLight = new THREE.DirectionalLight(new THREE.Color(1.0, 0.2, 0.2), 0.3);//0.4
 		directionalLight.position.set(0, 0, 1);
 		scene.add(directionalLight);
 
-		//var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
-		//grid.position.y = -1;
-		//scene.add(grid);
-
+		for (var p = 0; p < 60; p++) 
+        {
+            var particle = new THREE.Vector3(Math.random() * 40 - 10, Math.random() * 40 - 10, Math.random() * 40 - 10);
+            particles.vertices.push(particle);
+        }
+        particleSystem.rotation.y += clock.getDelta();
+      
+        scene.add(particleSystem);
 		$("#scene-sectionNv1").append(renderer.domElement);
 	}
 
@@ -608,14 +624,15 @@
 				<!--Contenido-->
 
 				<!-- ************************MENUS*********************** -->
-				<div class="modalPausa" id="Menu-Instrucciones" style="top:12%;">
+				<div class="modalPausa" id="Menu-Instrucciones" style="top:8%;">
 					<div class="justify-content-center">
-					<button type="button" class="close" data-dismiss="modal1" style="color:white;" aria-label="Close" id="Cerrar-Instrucciones">X</button><br>
+					<!--<button type="button" class="close" data-dismiss="modal1" style="color:white;" aria-label="Close" id="Cerrar-Instrucciones">X</button><br>-->
 						<h2 style="color:white;">INSTRUCCIONES</h2><br>
 						<h6 style="color:white;">Recolecta la mayor cantidad de gemas posibles llevándolas a tu base para ganar a tu contrincante.</h6><br>
 						<h5 style="color:white;">El jugador 1 deberá utilizar las teclas ASDW para moverse, mientras el jugador 2 deberá utilizar JKLI</h5><br>
-						<img src="../images/teclas.png"><br><br>
+						<img src="../images/Teclas.png"><br>
 						<h5 style="color:white;">Para pausar el juego pulsa "G"</h5>
+						<h4 style="color:red;">ATENCIÓN:</h4><h4 style="color:white;">Para que los cristales cuenten cada jugador debe volver a su base.</h4>
 						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button><br><br>
 					</div>
 				</div>

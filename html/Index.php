@@ -47,11 +47,8 @@
         <div class="card text-white bg-primary">     
             <div class="card-body">              
             <main role="main" class="inner cover">
-                <br>
-                <br>
-                
                 <h1 class="cover-heading">Bienvenido</h1>
-                <p class="lead">Crystals collecterses un juego de 1 contra 1 de un mismo teclado. Por favor introduzcan a continuación el nombre con el que se desean identificar:</p>
+                <p class="lead">Crystals collecterses un juego de 1 contra 1 de un mismo teclado o si se utiliza el buscador de Chrome puede utilizar controles. Actualmente cuenta con 3 niveles y si terminan el juego el resultado aparece en nuestro apartado de "Puntuaciones".<br><br>Para empezar a jugar por favor introduzcan a continuación el nombre con el que se desean identificar:</p>
                 <br><br>
                      
                         <table class="tablaPrincipal" style="width:100%">
