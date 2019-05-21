@@ -46,7 +46,7 @@
 	objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
 	objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2");
 	
-	var hasGP = false;
+	var hasGP = false;//Gamepad
     var repGP;
  
     function canGame() {
@@ -138,13 +138,13 @@
 	
 	var isWorldReady = [ false, false ];
 	$(document).ready(function() 
-	{
-		
+	{	
+		$("#Menu-FinNivel1").hide();
 		$("#cancion").trigger('play');
 		$("#Menu-Pausa").hide();
 		$(".GUI").hide();
 		$("#Menu-Sonido").hide();
-		$("#Menu-FinNivel1").hide();
+		
 
 		$("#cancion1").click(function(){
 			$("#cancion").attr("src","../music/0.mp3");
@@ -161,6 +161,10 @@
 
 		$("#silencio").click(function(){
 			$("#cancion").trigger('pause');
+		});
+
+		$("#Boton-ContinuarNv2").click(function(){
+			$("#Menu-FinNivel1").hide();
 		});
 
 		
@@ -220,24 +224,6 @@
 			$("#Menu-Sonido").hide();
 			$("#Menu-Pausa").show();
 		});
-
-
-		
-	/*
-		$("#BotonTiempo").click(function(){
-		//$(".modalPausa").click(function(){
-			JuegoEnProceso=!JuegoEnProceso;
-			if(JuegoEnProceso){
-				$(this).html("Pausa");	
-			}
-			else{
-					$(this).html("Continuar");
-					
-					 
-			}
-			});*/
-
-		
 
 		function obtener()
             {
@@ -385,6 +371,24 @@
 			}
 			isWorldReady[3] = true;
 		});
+
+		loadOBJWithMTL("../assets/", "CristalFalso.obj", "CristalFalso.mtl", (object) => {	
+			//object.rotation.y=THREE.Math.degToRad(270);	
+			
+			
+			object.position.y = 0.5;
+
+			for(var i=0; i<10; i++)
+			{
+				object.position.x=getRandomPos(7,-7.6);
+				object.position.z=getRandomPos(8,2);
+				object.scale.set(0.03,0.03,0.03);
+				object.name="Cristal-Falso-"+i;
+				ColisionCristales.push(object.clone());
+				scene.add(ColisionCristales[i]);
+			}
+			isWorldReady[4] = true;
+		});
 		
 		render();
 
@@ -415,7 +419,7 @@
 	}
 	var segundos=60;
 	var minutos=3600;
-	var tiempoJuegoMinutos=2;
+	var tiempoJuegoMinutos=1;
 	var tiempoJuegoSegundos=0;
 	var contTiempoJuegoMinutos=minutos;
 	var contTiempoJuegoSegundos=segundos;
@@ -436,7 +440,6 @@
 				contTiempoJuegoSegundos=segundos;
 			}
 			
-			
 			if(contTiempoJuegoMinutos<=0)
 			{
 				if(tiempoJuegoMinutos<=0)
@@ -453,15 +456,26 @@
 				finDelJuego();
 			}
 			if(JuegoEnProceso)
-			$("#Tiempo").html("0"+tiempoJuegoMinutos+":"+tiempoJuegoSegundos);	
+			{
+				if(tiempoJuegoSegundos<=0)
+				{
+					$("#Tiempo").html("0"+tiempoJuegoMinutos+":0"+tiempoJuegoSegundos);
+				}
+				else{
+					$("#Tiempo").html("0"+tiempoJuegoMinutos+":"+tiempoJuegoSegundos);
+				}
+			}
+			
 
 	}
 	function render() {
 		
 		requestAnimationFrame(render);
 
-            var delta = clock.getDelta();
-            particleSystem.rotation.y += delta;
+            //var delta = clock.getDelta();
+            // particleSystem.rotation.y += delta;
+			var deltaTime = clock.getDelta();
+			particleSystem.rotation.y += deltaTime;
 			deltaTime = clock.getDelta();	
 			juegoTime();
 
@@ -504,8 +518,7 @@
 			}
 			//pausarJuego()
 		
-			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3]) {
-
+			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3] && isWorldReady[4]) {
 				var j1=scene.getObjectByName("jugador1");
 				var j2=scene.getObjectByName("jugador2");
 				if(JuegoEnProceso){
@@ -513,7 +526,11 @@
 				objJugador[0].Globo.translateZ(forward * deltaTime);
 				objJugador[1].Globo.rotation.y += yaw2 * deltaTime;
 				objJugador[1].Globo.translateZ(forward2 * deltaTime);
-						
+				console.log("Posicion Jugador1 "+objJugador[0].Globo.position);
+				console.log("Posicion Jugador2 "+objJugador[1].Globo.position);
+				console.log("Rotacion Jugador1 "+objJugador[0].Globo.rotation.y);
+				console.log("Rotacion Jugador2 "+objJugador[1].Globo.rotation.y);
+				debugger;
 				}
 			//console.log("Jugador"+objJugador[0].Globo.position);
 			for(var i=0; i<2; i++)
@@ -591,12 +608,15 @@
 		renderer.setPixelRatio(visibleSize.width / visibleSize.height);
 		renderer.setSize(visibleSize.width, visibleSize.height);
 
-		var ambientLight = new THREE.AmbientLight(new THREE.Color(1.0, 1.0, 1.0), 0.5);
+		var ambientLight = new THREE.AmbientLight(new THREE.Color(1.0, 1.0, 1.0), 0.2);
 		scene.add(ambientLight);
 
-		var directionalLight = new THREE.DirectionalLight(new THREE.Color(1.0, 0.2, 0.2), 0.3);//0.4
+		var directionalLight = new THREE.DirectionalLight(new THREE.Color(1.0, 0.2, 0.2), 0.4);//0.4
 		directionalLight.position.set(0, 0, 1);
 		scene.add(directionalLight);
+		
+		var Light =new THREE.HemisphereLight(0x00320B, 0xCBEBFF, 1);
+		scene.add(Light);
 
 		for (var p = 0; p < 60; p++) 
         {
@@ -670,7 +690,7 @@
 						<h1 id="GUI_FinalJ1Nv1"style="color:white;">Jugador 1:</h1> <h1 id="GUI_FinalJ2Nv1" style="color:white;">Jugador 2:</h1> <br>
 						<!--<button style=" color: #fff; background-color:rgba(41, 7, 71,0.5);  border-color: #ffffff; border-width: 30%; font-weight: 400; border-radius: 0.60rem;"><h4>Compartir resultado <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
 						--><div id="fb-root"></div>
-						<button class="BtnOpcion1" id="Boton-ContinuarNv2"><h4>Pasar a Nivel 2</h4></button>
+						<button class="BtnOpcion1" id="Boton-ContinuarNv2" onclick="location='ventanaJuegoNv2.php'"><h4>Pasar a Nivel 2</h4></button>
 						<button class="BtnOpcion1"><h4>Reiniciar nivel</h4></button>
 						<button class="BtnOpcion1"><h4>Salir del juego</h4></button><br><br>
 					</div>
@@ -682,7 +702,7 @@
 						<br><br>    
 						<h5 class="GUI" id="GUIplayer1Nv1" style="color: rgb(132, 0, 255);font-family: Hobo Std;"></h5>
 						<h6 class="GUI" id="GUIpuntos1Nv1" style="color: rgb(243, 222, 203);"></h6>
-						<h3 class="GUI" id="Tiempo" style="color: black;">03:00</h3>
+						<h3 class="GUI" id="Tiempo" style="color: black;">02:00</h3>
 						<!--<button id="BotonTiempo">Pausa</button>-->
 						<h5 class="GUI" id="GUIplayer2Nv1" style="color: rgb(255, 123, 0);font-family: Hobo Std;"></h5>
 						<h6 class="GUI" id="GUIpuntos2Nv1" style="color: rgb(243, 222, 203);"></h6>

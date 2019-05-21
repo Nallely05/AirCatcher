@@ -84,6 +84,54 @@
   color: rgb(243, 203, 240);
 }
 
+
+#GUIplayer1Nv2 {
+  top: 15%;
+  left: -15%;
+  color: rgb(132, 0, 255);
+  font-family: Hobo Std;
+}
+#GUIpuntos1Nv2 {
+  top: 20%;
+  left: -15%;
+  color: rgb(203, 214, 243);
+}
+#GUIplayer2Nv2 {
+  top: 15%;
+  left: 45%;
+  color: rgb(255, 123, 0);
+  font-family: Hobo Std;
+}
+#GUIpuntos2Nv2 {
+  top: 20%;
+  left: 45%;
+  color: rgb(243, 203, 240);
+}
+
+
+#GUIplayer1Nv3 {
+  top: 15%;
+  left: -15%;
+  color: rgb(132, 0, 255);
+  font-family: Hobo Std;
+}
+#GUIpuntos1Nv3 {
+  top: 20%;
+  left: -15%;
+  color: rgb(203, 214, 243);
+}
+#GUIplayer2Nv3 {
+  top: 15%;
+  left: 45%;
+  color: rgb(255, 123, 0);
+  font-family: Hobo Std;
+}
+#GUIpuntos2Nv3 {
+  top: 20%;
+  left: 45%;
+  color: rgb(243, 203, 240);
+}
+
 #Tiempo
 {
   top: 15%;
