@@ -338,7 +338,7 @@
 			isWorldReady[0] = true;
 		});
 
-		loadOBJWithMTL("../assets/", "Jugador1.obj", "Jugador1.mtl", (object) => {
+		loadOBJWithMTL("../assets/", "J1.obj", "J1.mtl", (object) => {
 			object.name="jugador1";
 			object.position.y = 0.5;
 			object.position.z = 8;
@@ -351,7 +351,7 @@
 			isWorldReady[1] = true;
 		});
 
-		loadOBJWithMTL("../assets/", "Jugador2.obj", "Jugador2.mtl", (object) => {
+		loadOBJWithMTL("../assets/", "J2.obj", "J2.mtl", (object) => {
 			object.name="jugador2";
 			object.scale.set(0.3,0.3,0.3);
 			object.position.y = 0.5;
