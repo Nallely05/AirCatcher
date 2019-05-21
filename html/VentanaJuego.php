@@ -474,9 +474,10 @@
 
             //var delta = clock.getDelta();
             // particleSystem.rotation.y += delta;
-			var deltaTime = clock.getDelta();
+			//var deltaTime = clock.getDelta();//ESTO NOOOOOOOOO >:v
+			//NO CREAR OTRA VARIABLE DE clock.getDelta() dentro del render
+			deltaTime = clock.getDelta();
 			particleSystem.rotation.y += deltaTime;
-			deltaTime = clock.getDelta();	
 			juegoTime();
 
 			//console.log("Tiempo:"+tiempoJuegoSegundos);
