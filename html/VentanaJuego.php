@@ -460,7 +460,11 @@
 
 			//console.log("Tiempo:"+tiempoJuegoSegundos);
 			//------------------------JUGADOR1-----------------------------
-		
+			//Importante para evitar que los globos se queden en movimiento
+			yaw = 0;
+			forward = 0;
+			yaw2 = 0;
+			forward2 = 0;
 			if (keys["A"]) {
 				yaw = 2;
 			} else if (keys["D"]) {
