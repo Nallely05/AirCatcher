@@ -10,6 +10,8 @@
         <link rel="shortcut icon" href="../images/favicon.ico"/>
         <!-- JS -->
         <script type="text/javascript" src="../js/bootstrap.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script src="../js/facebook.js"></script>
         <!-- Styles -->
         
         <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
@@ -767,15 +769,14 @@
 				<!--Contenido-->
 
 				<!-- ************************MENUS*********************** -->
-				<div class="modalPausa" id="Menu-Instrucciones" style="top:8%;">
+				<div class="modalPausa" id="Menu-Instrucciones" style="top:10%;">
 					<div class="justify-content-center">
 					<!--<button type="button" class="close" data-dismiss="modal1" style="color:white;" aria-label="Close" id="Cerrar-Instrucciones">X</button><br>-->
-						<h2 style="color:white;">INSTRUCCIONES</h2><br>
-						<h6 style="color:white;">Recolecta la mayor cantidad de gemas posibles llevándolas a tu base para ganar a tu contrincante.</h6><br>
-						<h5 style="color:white;">El jugador 1 deberá utilizar las teclas ASDW para moverse, mientras el jugador 2 deberá utilizar JKLI</h5><br>
-						<img src="../images/Teclas.png"><br>
-						<h5 style="color:white;">Para pausar el juego pulsa "G"</h5>
-						<h4 style="color:red;">ATENCIÓN:</h4><h4 style="color:white;">Para que los cristales cuenten cada jugador debe volver a su base.</h4>
+					<h2 style="color:white;">NIVEL 3</h2><br><br>
+						<h5 style="color:white;">Recolecta la mayor cantidad de gemas posibles llevándolas a tu base para ganar a tu contrincante.</h5><br>
+						<h5 style="color:white;">Para que los cristales cuenten cada jugador debe volver a su base.</h5><br>
+						<h5 style="color:white;">Para pausar el juego pulsa "G"</h5><br>
+						<h4 style="color:red;">ATENCIÓN:</h4><h4 style="color:white;">Cuidado con colisionar con los pinos del área de juego.</h4>
 						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button><br><br>
 						<div class="loader" id="loader-4">
 						<span></span>
@@ -813,15 +814,15 @@
 
 				<div class="modalPausa" id="Menu-FinNivel3">
 					<div class="justify-content-center">
-						<h1 style="color:white;">RESULTADOS</h1>
+						<h1 style="color:white;">RESULTADOS DE CRYSTALS COLLECTERS</h1>
 						<br><br><br> 
-						<h1 style="color:red;">Ganador:</h1> <h1 style="color:white;" id="ganador"></h1>
-						<!--<h1 id="GUI_FinalJ1Nv3"style="color:white;">Jugador 1:</h1> <h1 id="GUI_FinalJ2Nv3" style="color:white;">Jugador 2:</h1> <br>
-						<button style=" color: #fff; background-color:rgba(41, 7, 71,0.5);  border-color: #ffffff; border-width: 30%; font-weight: 400; border-radius: 0.60rem;"><h4>Compartir resultado <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
-						--><div id="fb-root"></div>
-						<button class="BtnOpcion1" id="Boton-ContinuarNv2" onclick="location='Puntuaciones.php'"><h4>Ver puntuaciones</h4></button>
-						<button class="BtnOpcion1" onclick="location='ventanaJuego.php'"><h4>Reiniciar juego</h4></button>
-						<button class="BtnOpcion1" onclick="location='index.php'"><h4>Salir del juego</h4></button><br><br>
+						<h1 style="color:red;">Ganador:</h1> <h1 style="color:white;" id="ganador"></h1><br>
+						<!--<h1 id="GUI_FinalJ1Nv3"style="color:white;">Jugador 1:</h1> <h1 id="GUI_FinalJ2Nv3" style="color:white;">Jugador 2:</h1> <br>-->
+						<button class="BtnOpcion" style="margin:8px;"><h4>Compartir partida <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
+						<div id="fb-root"></div>
+						<button class="BtnOpcion" id="Boton-ContinuarNv2" onclick="location='Puntuaciones.php'" style="margin:8px;"><h4>Ver puntuaciones</h4></button><br>
+						<button class="BtnOpcion" onclick="location='ventanaJuego.php'" style="margin:8px;"><h4>Reiniciar juego</h4></button><br>
+						<button class="BtnOpcion" onclick="location='index.php'" style="margin:8px;"><h4>Salir del juego</h4></button><br><br>
 					</div>
 				</div>
 				<!-- ************************GUI*********************** -->
@@ -829,7 +830,7 @@
 						<br><br>    
 						<h5 class="GUI" id="GUIplayer1Nv3" style="color: rgb(132, 0, 255);font-family: Hobo Std;"></h5>
 						<h6 class="GUI" id="GUIpuntos1Nv3" style="color: rgb(243, 222, 203);"></h6>
-						<h3 class="GUI" id="Tiempo" style="color: black;">03:00</h3>
+						<h3 class="GUI" id="Tiempo" style="color: black;"></h3>
 						<!--<button id="BotonTiempo">Pausa</button>-->
 						<h5 class="GUI" id="GUIplayer2Nv3" style="color: rgb(255, 123, 0);font-family: Hobo Std;"></h5>
 						<h6 class="GUI" id="GUIpuntos2Nv3" style="color: rgb(243, 222, 203);"></h6>

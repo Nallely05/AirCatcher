@@ -8,8 +8,11 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,600" rel="stylesheet" type="text/css">
         <link rel="shortcut icon" href="../images/favicon.ico"/>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        
         <!-- JS -->
         <script type="text/javascript" src="../js/bootstrap.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script src="../js/facebook.js"></script>
         <!-- Styles -->
         
         <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
@@ -24,18 +27,19 @@
 
  <!-- Large modal -->
 
- <div class="modalPausa">
-     <div class="justify-content-center">
-     <button type="button" class="close" data-dismiss="modal1" style="color:white;" aria-label="Close">X</button><br>
-          <h1 style="color:white;">GANADOR</h1>
-          <br><br><br> 
-          <h1 style="color:rgb(255, 123, 0);">Jugador 2</h1> <br>
-          <button style=" color: #fff; background-color:rgba(41, 7, 71,0.5);  border-color: #ffffff; border-width: 30%; font-weight: 400; border-radius: 0.60rem;"><h4>Compartir resultado <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
-          <div id="fb-root"></div>
-          <button class="BtnOpcion1"><h4>Reiniciar juego</h4></button>
-          <button class="BtnOpcion1"><h4>Salir del juego</h4></button><br><br>
-    </div>
-</div>
+ <div class="modalPausa" id="Menu-FinNivel3">
+					<div class="justify-content-center">
+						<h1 style="color:white;">RESULTADOS</h1>
+						<br><br><br> 
+						<h1 style="color:red;">Ganador:</h1> <h1 style="color:white;" id="ganador"></h1><br>
+						<!--<h1 id="GUI_FinalJ1Nv3"style="color:white;">Jugador 1:</h1> <h1 id="GUI_FinalJ2Nv3" style="color:white;">Jugador 2:</h1> <br>-->
+						<button class="BtnOpcion" style="margin:8px;"><h4>Compartir partida <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
+						<div id="fb-root"></div>
+						<button class="BtnOpcion" id="Boton-ContinuarNv2" onclick="location='Puntuaciones.php'" style="margin:8px;"><h4>Ver puntuaciones</h4></button><br>
+						<button class="BtnOpcion" onclick="location='ventanaJuego.php'" style="margin:8px;"><h4>Reiniciar juego</h4></button><br>
+						<button class="BtnOpcion" onclick="location='index.php'" style="margin:8px;"><h4>Salir del juego</h4></button><br><br>
+					</div>
+				</div>
 
  <!--Intento Pop up-->
 
@@ -51,14 +55,7 @@
         </div>
     </div>
 
-        <!--FOOTER-->
-   <div class="container-fluid">
-        <footer>
-            <table class="navbar navbar-expand-lg navbar-light bg-light" style="width:100%">  
-                <td><p class="ArrobaHispanofic" style="color:white;">© Crystals collecters 2019</p></td>
-            </table>
-        </footer>
-    </div>
+  
 
         </body>
 </html>
