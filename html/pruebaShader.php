@@ -23,7 +23,7 @@
         vec3 p= position;
 
         p.x += sin(vertexDisplacement) * 50.0;
-        p.x y= cos(vertexDisplacement) * 50.0;
+        p.y += cos(vertexDisplacement) * 50.0;
 
 
         vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
@@ -37,11 +37,11 @@
         varying vec3 vUv;
         void main()
         {
-        float r=1.0 + cos(vUv.x* delta);
-        float g=0.5 + sin(delta) * 0.5;
+        float r=0.5 + cos(vUv.y * delta);
+        float g=0.0; //sin(delta) * 0.5;
         float b=0.0;
 
-        gl_FragColor = vec4r, g, b, vOpacity);
+        gl_FragColor = vec4(r, g, b, vOpacity);
         }
     </script>
 

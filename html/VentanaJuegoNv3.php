@@ -17,7 +17,8 @@
         <script type="text/javascript" src="../js/libs/three/three.js"></script>
         <script type="text/javascript" src="../js/libs/three/MTLLoader.js"></script>
         <script type="text/javascript" src="../js/libs/three/OBJLoader.js"></script>
-        <script type="text/javascript">
+    	<script type="text/javascript">
+
     var scene;
 	var camera;
 	var renderer;
@@ -38,13 +39,15 @@
 	var forward2 = 0;
 	var particles = new THREE.Geometry;
 	var particleTexture =THREE.ImageUtils.loadTexture('../images/luciernaga.png');
-	var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 1 });
+	var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 0.4 });
 	var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
-		
+	var cristalesEnJuego=20;
+	localStorage.setItem("puntuacionJ1Nv3",0);
+	localStorage.setItem("puntuacionJ2Nv3",0);
 	objJugador[0]={};
 	objJugador[1]={};
-	objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
-	objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2");
+	objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1Nv3");
+	objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2Nv3");
 	
 	var hasGP = false;
     var repGP;
@@ -52,7 +55,36 @@
     function canGame() {
         return "getGamepads" in navigator;
     }
- 
+	
+	function agregarPuntuaciones(username1,username2,nivel_Act,score1,score2)
+		{
+			var dataToSend =
+			{
+				action: 'agregarPartida',
+				gamename_01:username1,
+				gamepoints_01: score1,
+				nivel:nivel_Act,
+				gamename_02: username2,
+				gamepoints_02: score2
+			};
+
+			$.ajax({
+					url: 'php/conexion.php',
+					async: 'true',
+					type: 'POST',
+					data: dataToSend,
+					dataType: 'json',
+
+					success: function (respuesta) {
+						debugger;
+						//alert(respuesta);
+					},
+					error: function (x, h, r) {
+						alert("Error: " + x + h + r);
+					}
+				});  
+		} 
+
     function reportOnGamepad() 
 	{
         var gp = navigator.getGamepads()[0];
@@ -109,20 +141,51 @@
 
 	function finDelJuego()
 		{
+			//objJugador[0].puntuacion=5;
+			//objJugador[1].puntuacion=15;
+			localStorage.setItem("puntuacionJ1Nv3",objJugador[0].puntuacion);
+            localStorage.setItem("puntuacionJ2Nv3",objJugador[1].puntuacion);
+
+			var username1=localStorage.getItem("Jugador1");
+			var username2=localStorage.getItem("Jugador2");
+			var score1n1=localStorage.getItem("puntuacionJ1");
+			var score2n1=localStorage.getItem("puntuacionJ2");
+			agregarPuntuaciones(username1,username2,1,score1n1,score2n1);
+
+			var score1n2=localStorage.getItem("puntuacionJ1Nv2");
+			var score2n2=localStorage.getItem("puntuacionJ2Nv2");
+			agregarPuntuaciones(username1,username2,2,score1n2,score2n2);
+
+			var score1n3=localStorage.getItem("puntuacionJ1Nv3");
+			var score2n3=localStorage.getItem("puntuacionJ2Nv3");
+			agregarPuntuaciones(username1,username2,3,score1n3,score2n3);
+			var puntosJ1 = score1n1 + score1n2 + score1n3;
+			var puntosJ2 = score2n1 + score2n2 + score2n3;
+
+			if(puntosJ1>puntosJ2)
+			{
+				$("#ganador").html(localStorage.getItem("Jugador1"));
+			}
+			if(puntosJ2>puntosJ1)
+			{
+				$("#ganador").html(localStorage.getItem("Jugador2"));
+			}
+			if(puntosJ1==PuntosJ2)
+			{
+				$("#ganador").html("EMPATE");
+			}
+
 			$(".GUI").hide();
 			$("#Menu-FinNivel3").show();
 			$("#GUI_FinalJ1Nv3").html(localStorage.getItem("Jugador1")+": "+objJugador[0].puntuacion+" puntos");
 			$("#GUI_FinalJ2Nv3").html(localStorage.getItem("Jugador2")+": "+objJugador[1].puntuacion+" puntos");
-			//objJugador[0].puntuacion=5;
-			//objJugador[1].puntuacion=15;
-			localStorage.setItem("puntuacionJ1",objJugador[0].puntuacion);
-            localStorage.setItem("puntuacionJ2",objJugador[1].puntuacion);
+
 		}
 
 	function actualizarGUI()
 		{
-			localStorage.setItem("puntuacionJ1",objJugador[0].puntuacion);
-			localStorage.setItem("puntuacionJ2",objJugador[1].puntuacion);
+			localStorage.setItem("puntuacionJ1Nv3",objJugador[0].puntuacion);
+			localStorage.setItem("puntuacionJ2Nv3",objJugador[1].puntuacion);
 			$("#GUIpuntos1Nv3").html(objJugador[0].puntuacion);
 			$("#GUIpuntos2Nv3").html(objJugador[1].puntuacion);
 		}
@@ -222,8 +285,8 @@
 
 		function obtener()
             {
-				objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
-				objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2");
+				objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1Nv3");
+				objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2Nv3");
 				$("#GUIplayer1Nv3").html(localStorage.getItem("Jugador1"));
 				$("#GUIplayer2Nv3").html(localStorage.getItem("Jugador2")); 
 				$("#GUIpuntos1Nv3").html(objJugador[0].puntuacion);
@@ -533,8 +596,14 @@
 				objJugador[0].Globo.translateZ(forward * deltaTime);
 				objJugador[1].Globo.rotation.y += yaw2 * deltaTime;
 				objJugador[1].Globo.translateZ(forward2 * deltaTime);
-						
+
+					if(cristalesEnJuego<=0)
+						{
+							JuegoEnProceso=false;
+							finDelJuego();
+						}		
 				}
+
 			//console.log("Jugador"+objJugador[0].Globo.position);
 			for(var i=0; i<2; i++)
 			{
@@ -549,6 +618,7 @@
 							cristalTomado.scale.set(0.03,0.03,0.03);
 							cristalTomado.position.y = 1;
 							objJugador[i].Globo.add(cristalTomado);	
+							
 						}
 					var colisiones = objJugador[i].raycast.intersectObjects(LimitesEscenarioColision, true); //Detecta si hay colisión o no. Regresa un arreglo con los objetos que tocó
 					if(colisiones.length>0 && colisiones[0].distance<1)
@@ -575,6 +645,7 @@
 									scene.remove(objJugador[i].Globo.children[n]);
 									objJugador[i].puntuacion++;
 									objJugador[i].Globo.children.splice(n,1);
+									cristalesEnJuego--;	
 									actualizarGUI();
 								}
 							} //debugger;
@@ -621,21 +692,6 @@
 		var Light =new THREE.HemisphereLight(0x000051, 0x2D3E94, 1);
 		scene.add(Light);
 
-		//for (var l = 0; l < 10; l++) 
-        //{
-			debugger;
-		var lx=0;
-		var ly=4;
-		var lz=0;
-		if(lx<10)
-		{
-			lx += Math.random;
-		}
-		var pointLight = new THREE.PointLight( 0xF2DC3C, 0.2, 25 );
-		//pointLight.position.set( Math.random() * 1, Math.random() * 4, Math.random() * 5 );
-		pointLight.position.set(lx, ly, lz);
-		scene.add( pointLight );
-		//}
 
 		for (var p = 0; p < 60; p++) 
         {
@@ -654,7 +710,7 @@
     </head>
 
     <body class="text-center">
-	<audio autoplay loop controls hidden id="cancion" src="../music/0.mp3" style="z-index:99; color:white;">
+	<audio autoplay loop controls hidden id="cancion" src="../music/2.mp3" style="z-index:99; color:white;">
     </audio>
 				<!--Navbar-->
 			<div class="container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -706,7 +762,7 @@
 					<div class="justify-content-center">
 						<h1 style="color:white;">RESULTADOS</h1>
 						<br><br><br> 
-						<h1 style="color:red;">Ganador:</h1>
+						<h1 style="color:red;">Ganador:</h1> <h1 style="color:white;" id="ganador"></h1>
 						<!--<h1 id="GUI_FinalJ1Nv3"style="color:white;">Jugador 1:</h1> <h1 id="GUI_FinalJ2Nv3" style="color:white;">Jugador 2:</h1> <br>
 						<button style=" color: #fff; background-color:rgba(41, 7, 71,0.5);  border-color: #ffffff; border-width: 30%; font-weight: 400; border-radius: 0.60rem;"><h4>Compartir resultado <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
 						--><div id="fb-root"></div>

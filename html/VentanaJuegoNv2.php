@@ -41,11 +41,15 @@
 	var particleTexture =THREE.ImageUtils.loadTexture('../images/arena1.png');
 	var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 2 });
 	var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
-		
+	var cristalesEnJuego=20;
+	//var puntuacionJ1Nv2,puntuacionJ2Nv2;
+
+	localStorage.setItem("puntuacionJ1Nv2",0);
+	localStorage.setItem("puntuacionJ2Nv2",0);
 	objJugador[0]={};
 	objJugador[1]={};
-	objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
-	objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2");
+	objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1Nv2");
+	objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2Nv2");
 	
 	var hasGP = false;
     var repGP;
@@ -113,14 +117,14 @@
 			$("#GUI_FinalJ2Nv2").html(localStorage.getItem("Jugador2")+": "+objJugador[1].puntuacion+" puntos");
 			//objJugador[0].puntuacion=5;
 			//objJugador[1].puntuacion=15;
-			localStorage.setItem("puntuacionJ1",objJugador[0].puntuacion);
-            localStorage.setItem("puntuacionJ2",objJugador[1].puntuacion);
+			localStorage.setItem("puntuacionJ1Nv2",objJugador[0].puntuacion);
+            localStorage.setItem("puntuacionJ2Nv2",objJugador[1].puntuacion);
 		}
 
 	function actualizarGUI()
 		{
-			localStorage.setItem("puntuacionJ1",objJugador[0].puntuacion);
-			localStorage.setItem("puntuacionJ2",objJugador[1].puntuacion);
+			localStorage.setItem("puntuacionJ1Nv2",objJugador[0].puntuacion);
+			localStorage.setItem("puntuacionJ2Nv2",objJugador[1].puntuacion);
 			$("#GUIpuntos1Nv2").html(objJugador[0].puntuacion);
 			$("#GUIpuntos2Nv2").html(objJugador[1].puntuacion);
 		}
@@ -222,8 +226,8 @@
 
 		function obtener()
             {
-				objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
-				objJugador[1].puntuacion=localStorage.getItem("puntuacionJ2");
+				objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1Nv2");
+				objJugador[1].puntuacion=localStorage.getItem("puntuacionJ1Nv2");
 				$("#GUIplayer1Nv2").html(localStorage.getItem("Jugador1"));
 				$("#GUIplayer2Nv2").html(localStorage.getItem("Jugador2")); 
 				$("#GUIpuntos1Nv2").html(objJugador[0].puntuacion);
@@ -508,6 +512,11 @@
 				objJugador[1].Globo.rotation.y += yaw2 * deltaTime;
 				objJugador[1].Globo.translateZ(forward2 * deltaTime);
 						
+				if(cristalesEnJuego<=0)
+						{
+							JuegoEnProceso=false;
+							finDelJuego();
+						}	
 				}
 			//console.log("Jugador"+objJugador[0].Globo.position);
 			for(var i=0; i<2; i++)
@@ -554,6 +563,7 @@
 									scene.remove(objJugador[i].Globo.children[n]);
 									objJugador[i].puntuacion++;
 									objJugador[i].Globo.children.splice(n,1);
+									cristalesEnJuego--;
 									actualizarGUI();
 								}
 							} 
@@ -603,7 +613,7 @@
     </head>
 
     <body class="text-center">
-	<audio autoplay loop controls hidden id="cancion" src="../music/0.mp3" style="z-index:99; color:white;">
+	<audio autoplay loop controls hidden id="cancion" src="../music/1.mp3" style="z-index:99; color:white;">
     </audio>
 				<!--Navbar-->
 			<div class="container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">

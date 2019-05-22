@@ -38,9 +38,11 @@
 	var forward2 = 0;
 	var particles = new THREE.Geometry;
 	var particleTexture =THREE.ImageUtils.loadTexture('../images/Hoja.png');
-	var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 1 });
+	var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 0.4 });
 	var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
-		
+	var cristalesEnJuego=20;
+	var tiempoEspera=0;
+
 	objJugador[0]={};
 	objJugador[1]={};
 	objJugador[0].puntuacion=localStorage.getItem("puntuacionJ1");
@@ -144,7 +146,7 @@
 		$("#Menu-Pausa").hide();
 		$(".GUI").hide();
 		$("#Menu-Sonido").hide();
-		
+		$("#Boton-IniciarJuego").hide();
 
 		$("#cancion1").click(function(){
 			$("#cancion").attr("src","../music/0.mp3");
@@ -360,7 +362,7 @@
 			
 			object.position.y = 0.5;
 
-			for(var i=0; i<10; i++)
+			for(var i=0; i<20; i++)
 			{
 				object.position.x=getRandomPos(7,-7.6);
 				object.position.z=getRandomPos(8,2);
@@ -370,24 +372,6 @@
 				scene.add(ColisionCristales[i]);
 			}
 			isWorldReady[3] = true;
-		});
-
-		loadOBJWithMTL("../assets/", "CristalFalso.obj", "CristalFalso.mtl", (object) => {	
-			//object.rotation.y=THREE.Math.degToRad(270);	
-			
-			
-			object.position.y = 0.5;
-
-			for(var i=0; i<10; i++)
-			{
-				object.position.x=getRandomPos(7,-7.6);
-				object.position.z=getRandomPos(8,2);
-				object.scale.set(0.03,0.03,0.03);
-				object.name="Cristal-Falso-"+i;
-				ColisionCristales.push(object.clone());
-				scene.add(ColisionCristales[i]);
-			}
-			isWorldReady[4] = true;
 		});
 		
 		render();
@@ -420,7 +404,7 @@
 	var segundos=60;
 	var minutos=3600;
 	var tiempoJuegoMinutos=1;
-	var tiempoJuegoSegundos=0;
+	var tiempoJuegoSegundos=59;
 	var contTiempoJuegoMinutos=minutos;
 	var contTiempoJuegoSegundos=segundos;
 	function juegoTime()
@@ -468,19 +452,24 @@
 			
 
 	}
+	var ocultar=false;
 	function render() {
 		
-		requestAnimationFrame(render);
-
-            //var delta = clock.getDelta();
-            // particleSystem.rotation.y += delta;
-			//var deltaTime = clock.getDelta();//ESTO NOOOOOOOOO >:v
-			//NO CREAR OTRA VARIABLE DE clock.getDelta() dentro del render
+		//tiempoEspera=
+		 requestAnimationFrame(render);
+		if(ocultar==false)
+		{
+			$("#Boton-IniciarJuego").show();
+			$("#loader-4").hide();
+			ocultar=true;
+			
+		}
+			//console.log("tiempoEspera"+tiempoEspera);
 			deltaTime = clock.getDelta();
 			particleSystem.rotation.y += deltaTime;
 			juegoTime();
 
-			//console.log("Tiempo:"+tiempoJuegoSegundos);
+			//
 			//------------------------JUGADOR1-----------------------------
 			
 			yaw = 0;
@@ -527,11 +516,12 @@
 				objJugador[0].Globo.translateZ(forward * deltaTime);
 				objJugador[1].Globo.rotation.y += yaw2 * deltaTime;
 				objJugador[1].Globo.translateZ(forward2 * deltaTime);
-				console.log("Posicion Jugador1 "+objJugador[0].Globo.position);
-				console.log("Posicion Jugador2 "+objJugador[1].Globo.position);
-				console.log("Rotacion Jugador1 "+objJugador[0].Globo.rotation.y);
-				console.log("Rotacion Jugador2 "+objJugador[1].Globo.rotation.y);
-				debugger;
+				
+				if(cristalesEnJuego<=0)
+						{
+							JuegoEnProceso=false;
+							finDelJuego();
+						}	
 				}
 			//console.log("Jugador"+objJugador[0].Globo.position);
 			for(var i=0; i<2; i++)
@@ -548,6 +538,7 @@
 							cristalTomado.position.y = 1;
 							objJugador[i].Globo.add(cristalTomado);	
 						}
+					
 					var colisiones = objJugador[i].raycast.intersectObjects(LimitesEscenarioColision, true); //Detecta si hay colisión o no. Regresa un arreglo con los objetos que tocó
 					if(colisiones.length>0 && colisiones[0].distance<1)
 						{
@@ -573,6 +564,7 @@
 									scene.remove(objJugador[i].Globo.children[n]);
 									objJugador[i].puntuacion++;
 									objJugador[i].Globo.children.splice(n,1);
+									cristalesEnJuego --;
 									actualizarGUI();
 								}
 							} //debugger;
@@ -619,9 +611,11 @@
 		var Light =new THREE.HemisphereLight(0x00320B, 0xCBEBFF, 1);
 		scene.add(Light);
 
-		for (var p = 0; p < 60; p++) 
+		for (var p = 0; p < 30; p++) 
         {
-            var particle = new THREE.Vector3(Math.random() * 40 - 10, Math.random() * 40 - 10, Math.random() * 40 - 10);
+			//Math.random() * 40 - 10, Math.random() * 40 - 10, Math.random() * 40 - 10
+
+            var particle = new THREE.Vector3(getRandomPos(18, -18), getRandomPos(16, 0), getRandomPos(14, -10));
             particles.vertices.push(particle);
         }
         particleSystem.rotation.y += clock.getDelta();
@@ -654,7 +648,12 @@
 						<img src="../images/Teclas.png"><br>
 						<h5 style="color:white;">Para pausar el juego pulsa "G"</h5>
 						<h4 style="color:red;">ATENCIÓN:</h4><h4 style="color:white;">Para que los cristales cuenten cada jugador debe volver a su base.</h4>
-						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button><br><br>
+						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button>
+						<div class="loader" id="loader-4">
+						<span></span>
+						<span></span>
+						<span></span>
+						</div><br>
 					</div>
 				</div>
 
@@ -702,11 +701,11 @@
 				<div class="card text-white bg-primary">     
 						<br><br>    
 						<h5 class="GUI" id="GUIplayer1Nv1" style="color: rgb(132, 0, 255);font-family: Hobo Std;"></h5>
-						<h6 class="GUI" id="GUIpuntos1Nv1" style="color: rgb(243, 222, 203);"></h6>
-						<h3 class="GUI" id="Tiempo" style="color: black;">02:00</h3>
+						<h6 class="GUI" id="GUIpuntos1Nv1" style="color: black;"></h6>
+						<h3 class="GUI" id="Tiempo" style="color: black;"></h3>
 						<!--<button id="BotonTiempo">Pausa</button>-->
 						<h5 class="GUI" id="GUIplayer2Nv1" style="color: rgb(255, 123, 0);font-family: Hobo Std;"></h5>
-						<h6 class="GUI" id="GUIpuntos2Nv1" style="color: rgb(243, 222, 203);"></h6>
+						<h6 class="GUI" id="GUIpuntos2Nv1" style="color: black;"></h6>
 					<main role="main" class="inner cover">
 
 
