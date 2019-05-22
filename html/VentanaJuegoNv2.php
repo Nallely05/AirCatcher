@@ -679,7 +679,7 @@
 						<br><br>    
 						<h5 class="GUI" id="GUIplayer1Nv2" style="color: rgb(132, 0, 255);font-family: Hobo Std;"></h5>
 						<h6 class="GUI" id="GUIpuntos1Nv2" style="color: rgb(243, 222, 203);"></h6>
-						<h3 class="GUI" id="Tiempo" style="color: black;">03:00</h3>
+						<h3 class="GUI" id="Tiempo" style="color: black;"></h3>
 						<!--<button id="BotonTiempo">Pausa</button>-->
 						<h5 class="GUI" id="GUIplayer2Nv2" style="color: rgb(255, 123, 0);font-family: Hobo Std;"></h5>
 						<h6 class="GUI" id="GUIpuntos2Nv2" style="color: rgb(243, 222, 203);"></h6>

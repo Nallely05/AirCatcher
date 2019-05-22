@@ -664,9 +664,9 @@
 									<h1 style="color:white;">PAUSA</h1>
 									<br>
 									<button class="BtnOpcion" id="Boton-ContinuarPartida"><h4>Continuar partida</h4></button><br><br>
-									<button class="BtnOpcion" id="Boton-Reiniciar"><h4>Reiniciar nivel</h4></button><br><br>
+									<button class="BtnOpcion" id="Boton-Reiniciar" onclick="location='ventanaJuego.php'"><h4>Reiniciar nivel</h4></button><br><br>
 									<button class="BtnOpcion" id="Boton-OpcSonido"><h4>Opciones de sonido</h4></button><br><br>
-									<button class="BtnOpcion" id="Boton-Salir"><h4>Salir del juego</h4></button><br><br><br><br> <!--Volver al inicio-->
+									<button class="BtnOpcion" id="Boton-Salir" onclick="location='index.php'"><h4>Salir del juego</h4></button><br><br><br><br> <!--Volver al inicio-->
 								</div>
 							</div>
 
@@ -691,8 +691,8 @@
 						<!--<button style=" color: #fff; background-color:rgba(41, 7, 71,0.5);  border-color: #ffffff; border-width: 30%; font-weight: 400; border-radius: 0.60rem;"><h4>Compartir resultado <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
 						--><div id="fb-root"></div>
 						<button class="BtnOpcion1" id="Boton-ContinuarNv2" onclick="location='ventanaJuegoNv2.php'"><h4>Pasar a Nivel 2</h4></button>
-						<button class="BtnOpcion1"><h4>Reiniciar nivel</h4></button>
-						<button class="BtnOpcion1"><h4>Salir del juego</h4></button><br><br>
+						<button class="BtnOpcion1" onclick="location='ventanaJuego.php'"><h4>Reiniciar nivel</h4></button>
+						<button class="BtnOpcion1" onclick="location='index.php'"><h4>Salir del juego</h4></button><br><br>
 					</div>
 				</div>
 				<!-- ************************GUI*********************** -->
