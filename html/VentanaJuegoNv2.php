@@ -41,7 +41,7 @@
 	var particleTexture =THREE.ImageUtils.loadTexture('../images/arena1.png');
 	var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 2 });
 	var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
-	var cristalesEnJuego=30;
+	var cristalesEnJuego=20;
 	var tiempoEspera=0;
 
 	//var puntuacionJ1Nv2,puntuacionJ2Nv2;
@@ -360,7 +360,7 @@
 			
 			object.position.y = 0.5;
 
-			for(var i=0; i<10; i++)
+			for(var i=0; i<20; i++)
 			{
 				object.position.x=getRandomPos(7,-7.6);
 				object.position.z=getRandomPos(8,2);

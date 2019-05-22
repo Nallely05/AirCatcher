@@ -19,43 +19,6 @@
         <script type="text/javascript" src="../js/libs/three/three.js"></script>
         <script type="text/javascript" src="../js/libs/three/MTLLoader.js"></script>
         <script type="text/javascript" src="../js/libs/three/OBJLoader.js"></script>
-
-		
-		<script type="x-shader/x-vertex" id="vertexShader">
-			attribute float vertexDisplacement;
-			uniform float delta;
-			varying float vOpacity;
-			varying vec3 vUv;
-
-			void main()
-			{
-			vUv=position;
-			vOpacity= vertexDisplacement;
-			vec3 p= position;
-
-			p.x += sin(vertexDisplacement) * 50.0;
-			p.y += cos(vertexDisplacement) * 50.0;
-
-
-			vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
-			gl_Position= projectionMatrix * modelViewPosition;
-			}
-		</script>
-
-		<script type="x-shader/x-fragment" id="fragmentShader">
-			uniform float delta;
-			varying float vOpacity;
-			varying vec3 vUv;
-			void main()
-			{
-			float r=0.5 + cos(vUv.y * delta);
-			float g=0.0; //sin(delta) * 0.5;
-			float b=0.0;
-
-			gl_FragColor = vec4(r, g, b, vOpacity);
-			}
-		</script>
-
     	<script type="text/javascript">
 
     var scene;
@@ -120,7 +83,7 @@
 						//alert(respuesta);
 					},
 					error: function (x, h, r) {
-						alert("Error: " + x + h + r);
+						//alert("Error: " + x + h + r);
 					}
 				});  
 		} 
@@ -219,7 +182,6 @@
 			$("#Menu-FinNivel3").show();
 			$("#GUI_FinalJ1Nv3").html(localStorage.getItem("Jugador1")+": "+objJugador[0].puntuacion+" puntos");
 			$("#GUI_FinalJ2Nv3").html(localStorage.getItem("Jugador2")+": "+objJugador[1].puntuacion+" puntos");
-
 		}
 
 	function actualizarGUI()
@@ -266,6 +228,13 @@
 			$("#cancion").trigger('pause');
 		});
 
+		$('#compartirFB').click(function(){
+		var username1=$('#GUIplayer1Nv3').val();
+		var username2=$('#GUIplayer2Nv3').val();
+		var score1=puntosJ1;
+		var score2=puntosJ2;
+		shareScore(true,username1,score1,username2,score2);
+		});
 		
 		
         if(canGame()) 
@@ -375,6 +344,7 @@
 		var cube10 = cube1.clone();
 		var cube11 = cube1.clone();
 		var cube12 = cube1.clone();
+
 		cube1.name="Limite1";
 		cube2.name="Limite2";
 		cube3.name="Limite3";
@@ -818,7 +788,7 @@
 						<br><br><br> 
 						<h1 style="color:red;">Ganador:</h1> <h1 style="color:white;" id="ganador"></h1><br>
 						<!--<h1 id="GUI_FinalJ1Nv3"style="color:white;">Jugador 1:</h1> <h1 id="GUI_FinalJ2Nv3" style="color:white;">Jugador 2:</h1> <br>-->
-						<button class="BtnOpcion" style="margin:8px;"><h4>Compartir partida <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
+						<button class="BtnOpcion" style="margin:8px;" id="compartirFB"><h4>Compartir partida <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
 						<div id="fb-root"></div>
 						<button class="BtnOpcion" id="Boton-ContinuarNv2" onclick="location='Puntuaciones.php'" style="margin:8px;"><h4>Ver puntuaciones</h4></button><br>
 						<button class="BtnOpcion" onclick="location='ventanaJuego.php'" style="margin:8px;"><h4>Reiniciar juego</h4></button><br>

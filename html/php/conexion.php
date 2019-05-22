@@ -53,7 +53,7 @@
     function obtenerPuntuaciones()
     {
         $mysqli = connect();
-		$result = $mysqli->query("select* from tbl_partida  order by idPartida desc limit 5;");
+		$result = $mysqli->query("select* from tbl_partida  order by idPartida desc limit 3;");
 		
 		if (!$result) {
 			echo "Problema al hacer un query: " . $mysqli->error;								
