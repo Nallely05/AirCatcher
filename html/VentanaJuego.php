@@ -455,9 +455,8 @@
 	var ocultar=false;
 	function render() {
 		
-		//tiempoEspera=
-		 requestAnimationFrame(render);
-		if(ocultar==false)
+		tiempoEspera=requestAnimationFrame(render);
+		if(tiempoEspera>=60 && ocultar==false)
 		{
 			$("#Boton-IniciarJuego").show();
 			$("#loader-4").hide();
@@ -508,7 +507,7 @@
 			}
 			//pausarJuego()
 		
-			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3] && isWorldReady[4]) {
+			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3]) {
 				var j1=scene.getObjectByName("jugador1");
 				var j2=scene.getObjectByName("jugador2");
 				if(JuegoEnProceso){

@@ -41,7 +41,9 @@
 	var particleTexture =THREE.ImageUtils.loadTexture('../images/arena1.png');
 	var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 2 });
 	var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
-	var cristalesEnJuego=20;
+	var cristalesEnJuego=30;
+	var tiempoEspera=0;
+
 	//var puntuacionJ1Nv2,puntuacionJ2Nv2;
 
 	localStorage.setItem("puntuacionJ1Nv2",0);
@@ -147,6 +149,7 @@
 		$(".GUI").hide();
 		$("#Menu-Sonido").hide();
 		$("#Menu-FinNivel2").hide();
+		$("#Boton-IniciarJuego").hide();
 
 		$("#cancion1").click(function(){
 			$("#cancion").attr("src","../music/0.mp3");
@@ -455,9 +458,17 @@
 			{$("#Tiempo").html("0"+tiempoJuegoMinutos+":"+tiempoJuegoSegundos);	}
 
 	}
+
+	var ocultar=false;
 	function render() {
 		
-			requestAnimationFrame(render);
+			tiempoEspera=requestAnimationFrame(render);
+			if(tiempoEspera>=60 && ocultar==false)
+			{
+				$("#Boton-IniciarJuego").show();
+				$("#loader-4").hide();
+				ocultar=true;	
+			}
 			deltaTime = clock.getDelta();
 			particleSystem.rotation.y += deltaTime;	
 			juegoTime();
@@ -630,10 +641,14 @@
 						<h5 style="color:white;">Para que los cristales cuenten cada jugador debe volver a su base.</h5><br>
 						<h5 style="color:white;">Para pausar el juego pulsa "G"</h5><br>
 						<h4 style="color:red;">ATENCIÓN:</h4><h4 style="color:white;">Cuidado con los cristales falsos de este nivel.</h4>
-						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button><br><br>
+						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button>
+						<div class="loader" id="loader-4">
+						<span></span>
+						<span></span>
+						<span></span>
+						</div><br>
 					</div>
 				</div>
-
 
 				<div class="modalPausa" id="Menu-Pausa">
 								<div class="justify-content-center">
@@ -641,9 +656,9 @@
 									<h1 style="color:white;">PAUSA</h1>
 									<br>
 									<button class="BtnOpcion" id="Boton-ContinuarPartida"><h4>Continuar partida</h4></button><br><br>
-									<button class="BtnOpcion" id="Boton-Reiniciar"><h4>Reiniciar nivel</h4></button><br><br>
+									<button class="BtnOpcion" id="Boton-Reiniciar" onclick="location='ventanaJuegoNv2.php'"><h4>Reiniciar nivel</h4></button><br><br>
 									<button class="BtnOpcion" id="Boton-OpcSonido"><h4>Opciones de sonido</h4></button><br><br>
-									<button class="BtnOpcion" id="Boton-Salir"><h4>Salir del juego</h4></button><br><br><br><br> <!--Volver al inicio-->
+									<button class="BtnOpcion" id="Boton-Salir" onclick="location='index.php'"><h4>Salir del juego</h4></button><br><br><br><br> <!--Volver al inicio-->
 								</div>
 							</div>
 
@@ -668,8 +683,8 @@
 						<!--<button style=" color: #fff; background-color:rgba(41, 7, 71,0.5);  border-color: #ffffff; border-width: 30%; font-weight: 400; border-radius: 0.60rem;"><h4>Compartir resultado <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
 						--><div id="fb-root"></div>
 						<button class="BtnOpcion1" id="Boton-ContinuarNv2" onclick="location='ventanaJuegoNv3.php'"><h4>Pasar a Nivel 3</h4></button>
-						<button class="BtnOpcion1"><h4>Reiniciar nivel</h4></button>
-						<button class="BtnOpcion1"><h4>Salir del juego</h4></button><br><br>
+						<button class="BtnOpcion1" onclick="location='ventanaJuegoNv2.php'"><h4>Reiniciar nivel</h4></button>
+						<button class="BtnOpcion1" onclick="location='index.php'"><h4>Salir del juego</h4></button><br><br>
 					</div>
 				</div>
 				<!-- ************************GUI*********************** -->

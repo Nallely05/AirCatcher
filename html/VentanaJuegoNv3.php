@@ -17,6 +17,43 @@
         <script type="text/javascript" src="../js/libs/three/three.js"></script>
         <script type="text/javascript" src="../js/libs/three/MTLLoader.js"></script>
         <script type="text/javascript" src="../js/libs/three/OBJLoader.js"></script>
+
+		
+		<script type="x-shader/x-vertex" id="vertexShader">
+			attribute float vertexDisplacement;
+			uniform float delta;
+			varying float vOpacity;
+			varying vec3 vUv;
+
+			void main()
+			{
+			vUv=position;
+			vOpacity= vertexDisplacement;
+			vec3 p= position;
+
+			p.x += sin(vertexDisplacement) * 50.0;
+			p.y += cos(vertexDisplacement) * 50.0;
+
+
+			vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+			gl_Position= projectionMatrix * modelViewPosition;
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="fragmentShader">
+			uniform float delta;
+			varying float vOpacity;
+			varying vec3 vUv;
+			void main()
+			{
+			float r=0.5 + cos(vUv.y * delta);
+			float g=0.0; //sin(delta) * 0.5;
+			float b=0.0;
+
+			gl_FragColor = vec4(r, g, b, vOpacity);
+			}
+		</script>
+
     	<script type="text/javascript">
 
     var scene;
@@ -42,6 +79,7 @@
 	var particleMaterial = new THREE.ParticleBasicMaterial({ map: particleTexture, transparent: true, size: 0.4 });
 	var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
 	var cristalesEnJuego=20;
+	var tiempoEspera=0;
 	localStorage.setItem("puntuacionJ1Nv3",0);
 	localStorage.setItem("puntuacionJ2Nv3",0);
 	objJugador[0]={};
@@ -170,7 +208,7 @@
 			{
 				$("#ganador").html(localStorage.getItem("Jugador2"));
 			}
-			if(puntosJ1==PuntosJ2)
+			if(puntosJ1==puntosJ2)
 			{
 				$("#ganador").html("EMPATE");
 			}
@@ -207,6 +245,7 @@
 		$(".GUI").hide();
 		$("#Menu-Sonido").hide();
 		$("#Menu-FinNivel3").hide();
+		$("#Boton-IniciarJuego").hide();
 
 		$("#cancion1").click(function(){
 			$("#cancion").attr("src","../music/0.mp3");
@@ -540,9 +579,18 @@
 			$("#Tiempo").html("0"+tiempoJuegoMinutos+":"+tiempoJuegoSegundos);	
 
 	}
+	var ocultar=false;
 	function render() {
 		
-		requestAnimationFrame(render);
+		tiempoEspera=requestAnimationFrame(render);
+		if(tiempoEspera>=60 && ocultar==false)
+		{
+			$("#Boton-IniciarJuego").show();
+			$("#loader-4").hide();
+			ocultar=true;
+			
+		}
+
 			deltaTime = clock.getDelta();	
             particleSystem.rotation.y += deltaTime;
 			juegoTime();
@@ -729,6 +777,11 @@
 						<h5 style="color:white;">Para pausar el juego pulsa "G"</h5>
 						<h4 style="color:red;">ATENCIÓN:</h4><h4 style="color:white;">Para que los cristales cuenten cada jugador debe volver a su base.</h4>
 						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button><br><br>
+						<div class="loader" id="loader-4">
+						<span></span>
+						<span></span>
+						<span></span>
+						</div><br>
 					</div>
 				</div>
 
