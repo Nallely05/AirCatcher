@@ -793,7 +793,7 @@
 						<img src="../images/Teclas.png"><br>
 						<h5 style="color:white;">Para pausar el juego pulsa "G"</h5>
 						<h4 style="color:red;">ATENCIÓN:</h4><h4 style="color:white;">Para que los cristales cuenten cada jugador debe volver a su base.</h4>
-						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button><br>
+						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button>
 						<div class="loader" id="loader-4">
 						<span></span>
 						<span></span>

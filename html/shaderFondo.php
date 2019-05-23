@@ -18,12 +18,7 @@
         <script type="text/javascript" src="../js/libs/three/three.js"></script>
         <script type="text/javascript" src="../js/libs/three/MTLLoader.js"></script>
         <script type="text/javascript" src="../js/libs/three/OBJLoader.js"></script>
-
-		<!-- SHADERS -->
-	<script type="text/javascript">
-	var colorcillo;
-
-	</script>
+ 
 	
 	<script type="x-shader/x-vertex" id="vertexShaderBrillo">
 		uniform vec3 viewVector;
@@ -89,8 +84,6 @@
 		}
 	</script>
 
-
-
         <script type="text/javascript">
     var scene;
 	var camera;
@@ -108,18 +101,16 @@
 	var particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
 	var cristalesEnJuego=20;
 	var tiempoEspera=0;
-
-	//var puntuacionJ1Nv2,puntuacionJ2Nv2;
-
+	var shader = true;
+	var uniforms;
+	var material;
+	var pMaterial;
 	
 	var isWorldReady = [ false, false ];
 	$(document).ready(function() 
 	{
 		setupScene();
-
-	
-		//-------------------COSOS DE SHADER-------------------
-		//var geometry = new THREE.PlaneBufferGeometry(2, 2);
+		//-------------------SHADER-------------------
 		var geometry = new THREE.BoxGeometry( 2, 2, 2 );
 
 		uniforms = {
@@ -135,7 +126,7 @@
 		var mesh = new THREE.Mesh( geometry, material );
 		mesh.name = "elmesh";
 		scene.add( mesh );
-		//-------------------COSOS DE SHADER-------------------
+		//-------------------SHADER-------------------
 
 		render();
 
@@ -149,7 +140,7 @@
 
 		var loader = new THREE.TextureLoader().load(
 			// resource URL
-			"css/arr.png",
+			"../css/arr.png",
 			// Function when resource is loaded
 			function ( texture ) {
 				// do something with the texture
@@ -236,9 +227,18 @@
 	}
 
 	var ocultar=false;
-	function render() {
+	function render(timestamp) {
 		
 			tiempoEspera=requestAnimationFrame(render);
+			uniforms.time.value = timestamp / 1000;
+			
+			var em = scene.getObjectByName("elmesh");
+			var piedra = scene.getObjectByName("lunapiedra");
+			var brillo = scene.getObjectByName("lunabrillo");
+			em.translate.y += 0.1;
+			piedra.rotation.y += 0.02;
+			brillo.rotation.y += 0.02;
+
 			if(tiempoEspera>=60 && ocultar==false)
 			{
 				$("#Boton-IniciarJuego").show();
@@ -249,11 +249,6 @@
 			particleSystem.rotation.y += deltaTime;	
 			juegoTime();
 			
-
-			//console.log("Tiempo:"+tiempoJuegoSegundos);
-			//------------------------JUGADOR1-----------------------------
-			
-			//-----------------------PAUSA------------------------------
 			if (keys["G"]) { //32
 				JuegoEnProceso=false;
 				$(".GUI").hide();
@@ -284,7 +279,38 @@
 		var directionalLight = new THREE.DirectionalLight(new THREE.Color(1.0, 0.2, 0.2), 0.3);//0.4
 		directionalLight.position.set(0, 0, 1);
 		scene.add(directionalLight);
+		
+		var sphereGeom = new THREE.SphereGeometry(5, 16, 16);
+    
+		var moonTexture = THREE.ImageUtils.loadTexture( '../css/piedra.jpg' );
+		var moonMaterial = new THREE.MeshBasicMaterial( { map: moonTexture } );
+    	var moon = new THREE.Mesh(sphereGeom, moonMaterial);
+		moon.position.set(0,5,0);
+		moon.name = "lunapiedra";
+    	scene.add(moon);
 
+    	var customMaterial = new THREE.ShaderMaterial( 
+			{
+			    uniforms: 
+				{ 
+					"c":   { type: "f", value: 1.4 },
+					"p":   { type: "f", value: 1.4 },
+					glowColor: { type: "c", value: new THREE.Color(0xe5740b) },
+					viewVector: { type: "v3", value: camera.position }
+				},
+				vertexShader:   document.getElementById( 'vertexShaderBrillo').textContent,
+				fragmentShader: document.getElementById( 'fragmentShaderBrillo').textContent,
+				side: THREE.FrontSide,
+				blending: THREE.AdditiveBlending,
+				transparent: true
+			}   );
+            
+        this.moonGlow = new THREE.Mesh( sphereGeom.clone(), customMaterial.clone() );
+        moonGlow.position.set(moon.position.x,moon.position.y, moon.position.z );
+        moonGlow.scale.multiplyScalar(1.1);
+        moonGlow.name = "lunabrillo";
+        scene.add( moonGlow );
+		
 		
 		$("#scene-sectionNv2").append(renderer.domElement);
 	}

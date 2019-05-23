@@ -444,7 +444,7 @@
 			isWorldReady[3] = true;
 		});
 
-		loadOBJWithMTL("../assets/", "CristalFalso.obj", "CristalFalso.mtl", (object) => {	
+		loadOBJWithMTL("../assets/", "Cristal.obj", "Cristal.mtl", (object) => {	
 			
 			object.position.y = 0.5;
 
