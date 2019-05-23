@@ -146,6 +146,8 @@
 
 	function finDelJuego()
 		{
+			if(!finalizarCompletamente)
+			{
 			//objJugador[0].puntuacion=5;
 			//objJugador[1].puntuacion=15;
 			localStorage.setItem("puntuacionJ1Nv3",objJugador[0].puntuacion);
@@ -184,6 +186,8 @@
 			$("#Menu-FinNivel3").show();
 			$("#GUI_FinalJ1Nv3").html(localStorage.getItem("Jugador1")+": "+objJugador[0].puntuacion+" puntos");
 			$("#GUI_FinalJ2Nv3").html(localStorage.getItem("Jugador2")+": "+objJugador[1].puntuacion+" puntos");
+			finalizarCompletamente = true;
+			 }
 		}
 
 	function actualizarGUI()
@@ -516,6 +520,7 @@
 	var tiempoJuegoSegundos=0;
 	var contTiempoJuegoMinutos=minutos;
 	var contTiempoJuegoSegundos=segundos;
+	var finalizarCompletamente = false;
 	function juegoTime()
 	{	
 		if(JuegoEnProceso)
