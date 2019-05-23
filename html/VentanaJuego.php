@@ -15,6 +15,8 @@
         <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
         <script type="text/javascript" src="../js/libs/jquery/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" src="../js/libs/three/three.js"></script>
+		<script type="text/javascript" src="../js/libs/three/RenderPass.js"></script>
+		<script type="text/javascript" src="../js/libs/three/ShaderPass.js"></script>
         <script type="text/javascript" src="../js/libs/three/MTLLoader.js"></script>
         <script type="text/javascript" src="../js/libs/three/OBJLoader.js"></script>
         <script type="text/javascript">

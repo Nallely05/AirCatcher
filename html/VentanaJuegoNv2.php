@@ -17,6 +17,78 @@
         <script type="text/javascript" src="../js/libs/three/three.js"></script>
         <script type="text/javascript" src="../js/libs/three/MTLLoader.js"></script>
         <script type="text/javascript" src="../js/libs/three/OBJLoader.js"></script>
+
+		<!-- SHADERS -->
+	<script type="text/javascript">
+	var colorcillo;
+
+	</script>
+	
+	<script type="x-shader/x-vertex" id="vertexShaderBrillo">
+		uniform vec3 viewVector;
+		uniform float c;
+		uniform float p;
+		varying float intensity;
+		void main() 
+		{
+    		vec3 vNormal = normalize( normalMatrix * normal );
+			vec3 vNormel = normalize( normalMatrix * viewVector );
+			intensity = pow( c - dot(vNormal, vNormel), p );
+	
+    		gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		}
+	</script>
+
+	<script type="x-shader/x-vertex" id="fragmentShaderBrillo">
+		uniform vec3 glowColor;
+		varying float intensity;
+		void main() 
+		{
+			vec3 glow = glowColor * intensity;
+    		gl_FragColor = vec4( glow, 1.0 );
+		}
+	</script>
+
+	<script id="vertexShader" type="x-shader/x-vertex">
+		varying vec2 vUv;
+			void main()	{
+				vUv = uv;
+				gl_Position = vec4( position, 1.0 );
+			}
+	</script>
+
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		varying vec2 vUv;
+		uniform float time;
+		void main()	{
+			vec2 p = - 1.0 + 2.0 * vUv;
+			float a = time * 40.0;
+			float d, e, f, g = 1.0 / 40.0 ,h ,i ,r ,q;
+			e = 400.0 * ( p.x * 0.5 + 0.5 );
+			f = 400.0 * ( p.y * 0.5 + 0.5 );
+			i = 200.0 + sin( e * g + a / 150.0 ) * 20.0;
+			d = 200.0 + cos( f * g / 2.0 ) * 18.0 + cos( e * g ) * 7.0;
+			r = sqrt( pow( abs( i - e ), 2.0 ) + pow( abs( d - f ), 2.0 ) );
+			q = f / r;
+			e = ( r * cos( q ) ) - a / 2.0;
+			f = ( r * sin( q ) ) - a / 2.0;
+			d = sin( e * g ) * 176.0 + sin( e * g ) * 164.0 + r;
+			h = ( ( f + d ) + a / 2.0 ) * g;
+			i = cos( h + r * p.x / 1.3 ) * ( e + e + a ) + cos( q * g * 6.0 ) * ( r + h / 3.0 );
+			h = sin( f * g ) * 144.0 - sin( e * g ) * 212.0 * p.x;
+			h = ( h + ( f - e ) * q + sin( r - ( a + h ) / 7.0 ) * 10.0 + i / 4.0 ) * g;
+			i += cos( h * 2.3 * sin( a / 350.0 - q ) ) * 184.0 * sin( q - ( r * 4.3 + a / 12.0 ) * g ) + tan( r * g + h ) * 184.0 * cos( r * g + h );
+			i = mod( i / 5.6, 256.0 ) / 64.0;
+			if ( i < 0.0 ) i += 4.0;
+			if ( i >= 2.0 ) i = 4.0 - i;
+			d = r / 350.0;
+			d += sin( d * d * 8.0 ) * 0.52;
+			f = ( sin( a * g ) + 1.0 ) / 2.0;
+			gl_FragColor = vec4( vec3( f * i / 1.6, i / 2.0 + d / 13.0, i ) * d * p.x + vec3( i / 1.3 + d / 8.0, i / 2.0 + d / 18.0, i ) * d * ( 1.0 - p.x ), 1.0 );
+		}
+	</script>
+
+
         <script type="text/javascript">
     var scene;
 	var camera;
@@ -387,12 +459,58 @@
 			}
 			isWorldReady[4] = true;
 		});
-		
+
+		//-------------------COSOS DE SHADER-------------------
+		//var geometry = new THREE.PlaneBufferGeometry(2, 2);
+		var geometry = new THREE.BoxGeometry( 2, 2, 2 );
+
+		uniforms = {
+					time: { value: 1.0 }
+				};
+
+		material = new THREE.ShaderMaterial( {
+					uniforms: uniforms,
+					vertexShader: document.getElementById( 'vertexShader' ).textContent,
+					fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+				} );
+
+		var mesh = new THREE.Mesh( geometry, material );
+		mesh.name = "elmesh";
+		scene.add( mesh );
+		//-------------------COSOS DE SHADER-------------------
+
 		render();
 
 		document.addEventListener('keydown', onKeyDown);
 		document.addEventListener('keyup', onKeyUp);		
 	});
+		
+	function createElementMaterial() {
+
+		var material = new THREE.MeshBasicMaterial(); // create a material
+
+		var loader = new THREE.TextureLoader().load(
+			// resource URL
+			"css/arr.png",
+			// Function when resource is loaded
+			function ( texture ) {
+				// do something with the texture
+					texture.wrapS = THREE.RepeatWrapping;
+					texture.wrapT = THREE.RepeatWrapping;
+					texture.offset.x = 90/(2*Math.PI);
+					material.map = texture; // set the material's map when when the texture is loaded
+			},
+			// Function called when download progresses
+			function ( xhr ) {
+				console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+			},
+			// Function called when download errors
+			function ( xhr ) {
+				console.log( 'An error happened' );
+			}
+		);
+		return material; // return the material
+	}
 
 	function loadOBJWithMTL(path, objFile, mtlFile, onLoadCallback) {
 		var mtlLoader = new THREE.MTLLoader();
@@ -514,6 +632,11 @@
 			//pausarJuego()
 		
 			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3] && isWorldReady[4]) {
+
+				//--------------------SHADER--------------------
+				var em = scene.getObjectByName("elmesh");
+				em.position.set(0,0,0);
+				//--------------------SHADER--------------------
 
 				var j1=scene.getObjectByName("jugador1");
 				var j2=scene.getObjectByName("jugador2");
@@ -641,7 +764,7 @@
 						<h5 style="color:white;">Para que los cristales cuenten cada jugador debe volver a su base.</h5><br>
 						<h5 style="color:white;">Para pausar el juego pulsa "G"</h5><br>
 						<h4 style="color:red;">ATENCIÓN:</h4><h4 style="color:white;">Cuidado con los cristales falsos de este nivel.</h4>
-						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button>
+						<button class="BtnBegin" id="Boton-IniciarJuego"><h3>Empezar</h3></button><br>
 						<div class="loader" id="loader-4">
 						<span></span>
 						<span></span>
