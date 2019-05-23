@@ -18,6 +18,7 @@ window.fbAsyncInit = function () {
 
 
 function shareScore(active, username1, score1, username2, score2) {
+    debugger;
     if(active)
     {
             //var img = renderer.domElement.toDataURL("image/png");

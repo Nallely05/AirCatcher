@@ -11,7 +11,7 @@
         <!-- JS -->
         <script type="text/javascript" src="../js/bootstrap.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-        <script src="../js/facebook.js"></script>
+        
         <!-- Styles -->
         
         <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
@@ -21,6 +21,7 @@
 		<script type="text/javascript" src="../js/libs/three/ShaderPass.js"></script>
         <script type="text/javascript" src="../js/libs/three/MTLLoader.js"></script>
         <script type="text/javascript" src="../js/libs/three/OBJLoader.js"></script>
+		<script src="../js/facebook.js"></script>
     	<script type="text/javascript">
 
     var scene;
@@ -235,11 +236,14 @@
 		});
 
 		$('#compartirFB').click(function(){
-		var username1=$('#GUIplayer1Nv3').val();
-		var username2=$('#GUIplayer2Nv3').val();
-		var score1=puntosJ1;
-		var score2=puntosJ2;
-		shareScore(true,username1,score1,username2,score2);
+			debugger;
+			var username1=$('#GUIplayer1Nv3').val();
+			var username2=$('#GUIplayer2Nv3').val();
+			var score1 = 0;
+			var score2 = 0;
+			score1 =localStorage.getItem("puntuacionJ1") + localStorage.getItem("puntuacionJ1Nv2") + localStorage.getItem("puntuacionJ1Nv3");
+			score2 =localStorage.getItem("puntuacionJ2") + localStorage.getItem("puntuacionJ2Nv2") + localStorage.getItem("puntuacionJ2Nv3");
+			shareScore(true,username1,score1,username2,score2);
 		});
 		
 		
@@ -583,6 +587,10 @@
 			yaw2 = 0;
 			forward2 = 0;
 
+			if (keys["N"]) {
+				JuegoEnProceso=false;
+				finDelJuego();
+			}
 			if (keys["A"]) {
 				yaw = 2;
 			} else if (keys["D"]) {
