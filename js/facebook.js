@@ -20,10 +20,6 @@ window.fbAsyncInit = function () {
 function shareScore(active, username1, score1, username2, score2) {
     if(active)
     {
-            //var img = renderer.domElement.toDataURL("image/png");
-            //location:'saveImageBase64.php?image=' + img;
-            //debugger;
-
             FB.ui({
                 method: 'share_open_graph',
                 action_type: 'og.likes',
@@ -32,7 +28,7 @@ function shareScore(active, username1, score1, username2, score2) {
                         'og:url': "http://crystalscollecters.twicky.com.mx",
                         'og:title': "Resultados de Crystals Collecters",
                         'og:description': username1 + " obtuvo: " + score1 + " puntos y " + username2 + ' obtuvo: ' + score2 + " puntos",
-                        'og:image': "http://games.twicky.com.mx/crystal-bit/public/image.png",
+                        'og:image': "http://games.twicky.com.mx/crystal-bit/public/images/Juego.png",
                         'og:image:width': 320,
                         'og:image:height': 240,
                         'og:image:type': "image/png"

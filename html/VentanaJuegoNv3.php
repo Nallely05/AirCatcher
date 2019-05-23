@@ -238,6 +238,49 @@
 		shareScore(true,username1,score1,username2,score2);
 		});
 		
+		//-----------------------FACEBOOK--------------------------
+		var activeFacebook = true;
+		window.fbAsyncInit = function () {
+			FB.init({
+				appId: '416423365785590', /* Pegar aqui el número de identificador de facebook*/
+				xfbml: true,
+				version: 'v3.2'
+			});
+			FB.AppEvents.logPageView();
+		};
+
+		(function (d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) { return; }
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+
+
+		function shareScore(active, username1, score1, username2, score2) {
+			if(active)
+			{
+					FB.ui({
+						method: 'share_open_graph',
+						action_type: 'og.likes',
+						action_properties: JSON.stringify({
+							object: {
+								'og:url': "http://crystalscollecters.twicky.com.mx",
+								'og:title': "Resultados de Crystals Collecters",
+								'og:description': username1 + " obtuvo: " + score1 + " puntos y " + username2 + ' obtuvo: ' + score2 + " puntos",
+								'og:image': "http://games.twicky.com.mx/crystal-bit/public/images/Juego.png",
+								'og:image:width': 320,
+								'og:image:height': 240,
+								'og:image:type': "image/png"
+							}
+						})
+					},
+						function (response) {
+						});
+			}
+		}
+		//-----------------------FACEBOOK---------------------------
 		
         if(canGame()) 
 		{
@@ -792,7 +835,7 @@
 						<!--<h1 id="GUI_FinalJ1Nv3"style="color:white;">Jugador 1:</h1> <h1 id="GUI_FinalJ2Nv3" style="color:white;">Jugador 2:</h1> <br>-->
 						<button class="BtnOpcion" style="margin:8px;" id="compartirFB"><h4>Compartir partida <i class="fab fa-facebook" style="color: white;"></i></h4></button><br>
 						<div id="fb-root"></div>
-						<button class="BtnOpcion" id="Boton-ContinuarNv2" onclick="location='Puntuaciones.php'" style="margin:8px;"><h4>Ver puntuaciones</h4></button><br>
+						<button class="BtnOpcion" id="Boton-ContinuarNv2" onclick="location='puntuaciones.php'" style="margin:8px;"><h4>Ver puntuaciones</h4></button><br>
 						<button class="BtnOpcion" onclick="location='ventanaJuego.php'" style="margin:8px;"><h4>Reiniciar juego</h4></button><br>
 						<button class="BtnOpcion" onclick="location='index.php'" style="margin:8px;"><h4>Salir del juego</h4></button><br><br>
 					</div>
