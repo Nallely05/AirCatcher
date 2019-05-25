@@ -18,6 +18,7 @@ window.fbAsyncInit = function () {
 
 
 function shareScore(active, username1, score1, username2, score2) {
+    debugger;
     if(active)
     {
             FB.ui({
@@ -28,7 +29,7 @@ function shareScore(active, username1, score1, username2, score2) {
                         'og:url': "http://crystalscollecters.twicky.com.mx",
                         'og:title': "Resultados de Crystals Collecters",
                         'og:description': username1 + " obtuvo: " + score1 + " puntos y " + username2 + ' obtuvo: ' + score2 + " puntos",
-                        'og:image': "http://games.twicky.com.mx/crystal-bit/public/images/Juego.png",
+                        'og:image': "http://crystalscollecters.twicky.com.mx/images/game_01.png",
                         'og:image:width': 320,
                         'og:image:height': 240,
                         'og:image:type': "image/png"
@@ -42,9 +43,9 @@ function shareScore(active, username1, score1, username2, score2) {
         /*
         FB.ui({
             method: 'feed', /* method: 'feed'  solo en el muro
-            link: 'http://games.twicky.com.mx/crystal-bit/public/index.php',
+            link: 'http://crystalscollecters.twicky.com.mx',
             quote: 'Jugador 1: ' + username1 + ': ' + score1 + '\n Jugador 2: ' + username2 + ' : ' + score2,
-            picture: 'http://games.twicky.com.mx/crystal-bit/public/media/img/gamercat.jpg'
+            picture: 'http://crystalscollecters.twicky.com.mx/images/game_01.png'
         });*/
     }
 }
